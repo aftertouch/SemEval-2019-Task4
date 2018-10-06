@@ -1,4 +1,4 @@
-from data import parse_xml
+from datatasks import parse_xml
 
 def main():
     data = parse_xml.parse_text('../data/test/articles_sample.xml')
