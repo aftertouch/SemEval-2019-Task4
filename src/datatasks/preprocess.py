@@ -4,8 +4,9 @@ from nltk.tokenize.toktok import ToktokTokenizer
 from nltk.corpus import stopwords
 from nltk import wordpunct_tokenize
 import re
-from contractions import CONTRACTION_MAP
+from datatasks.contractions import CONTRACTION_MAP
 import unicodedata
+from tqdm import tqdm
 
 def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
                      accented_char_removal=True, text_lower_case=True, 
@@ -20,7 +21,7 @@ def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
     
     normalized_corpus = []
     # normalize each document in the corpus
-    for doc in corpus:
+    for doc in tqdm(corpus):
         # remove accented characters
         if accented_char_removal:
             doc = remove_accented_chars(doc)

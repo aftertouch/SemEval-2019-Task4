@@ -1,13 +1,19 @@
 import pandas as pd
 from math import floor
-from preprocess import normalize_corpus
+from datatasks.preprocess import normalize_corpus
 from nltk.tokenize import RegexpTokenizer
 
-def sample_preprocess_data(df, n_samples, sample_size, train_or_val, save=False):
+def sample_preprocess_data(DATA_PATH, n_samples, sample_size, train_or_val, save=False):
 
-    # Get the processed folder path
-    DATA_PATH = '../data/'
+    # Get the processed folder paths
+    DATA_INTERIM_PATH = DATA_PATH + 'interim/'
     DATA_PROCESSED_PATH = DATA_PATH + 'processed/'
+
+    # Load dataframe to sample
+    if train_or_val == 'train':
+        df = pd.read_csv(DATA_INTERIM_PATH + 'train.csv')
+    elif train_or_val == 'val':
+        df = pd.read_csv(DATA_INTERIM_PATH + 'val.csv')
     
     for i in range(n_samples):
         

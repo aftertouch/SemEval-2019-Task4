@@ -1,12 +1,26 @@
 import xml.etree.cElementTree as et
 import pandas as pd
+from tqdm import tqdm
 
-def parse_provided_gt():
+def parse_provided(DATA_PATH):
+
+    DATA_INTERIM_PATH = DATA_PATH + 'interim/'
+
+    gt_list = parse_provided_gt(DATA_PATH)
+    text_list = parse_provided_text(DATA_PATH)
+
+    train = text_list[0].merge(gt_list[0], on='id')
+    val = text_list[1].merge(gt_list[1], on='id')
+
+    print('Saving')
+
+    train.to_csv(DATA_INTERIM_PATH + 'train.csv', index=False)
+    val.to_csv(DATA_INTERIM_PATH + 'val.csv', index=False)
+
+def parse_provided_gt(DATA_PATH):
 
     # Get paths to data folders
-    DATA_PATH = '../data/'
     DATA_RAW_PATH = DATA_PATH + 'raw/'
-    DATA_INTERIM_PATH = DATA_PATH + 'interim/'
 
     # Get paths and column names for data files
     try:
@@ -14,7 +28,11 @@ def parse_provided_gt():
         gt_val_path = DATA_RAW_PATH + 'ground-truth-validation-20180831.xml'
     except:
         print('Data file(s) not found.')
+
     gt_cols = ['id', 'hyperpartisan', 'bias', 'url', 'labeled-by']
+    gt_list = []
+
+    print('Parsing ground truth')
 
     # Parse ground truth files
     for gt_path in [gt_train_path, gt_val_path]:
@@ -26,22 +44,19 @@ def parse_provided_gt():
 
         # Get data for columns
         xml_data = [[article.get('id'), article.get('hyperpartisan'), article.get('bias'), article.get('url'), article.get('labeled-by')] 
-                    for article in articles]
+                    for article in tqdm(articles)]
 
         # Create dataframes
         gt_df = pd.DataFrame(xml_data, columns=gt_cols)
 
-        if gt_path == 'gt_train_path':
-            gt_df.to_csv(DATA_INTERIM_PATH + 'gt_train.csv', index=False)
-        elif gt_path == 'gt_val_path':
-            gt_df.to_csv(DATA_INTERIM_PATH + 'gt_val.csv', index=False)
+        gt_list.append(gt_df)
 
-def parse_provided_text(file=None):
+    return gt_list
+
+def parse_provided_text(DATA_PATH):
 
     # Get paths to data folders
-    DATA_PATH = '../data/'
     DATA_RAW_PATH = DATA_PATH + 'raw/'
-    DATA_INTERIM_PATH = DATA_PATH + 'interim/'
 
     try:
         text_train_path = DATA_RAW_PATH + 'articles-training-20180831.xml'
@@ -49,20 +64,21 @@ def parse_provided_text(file=None):
     except:
         print('Data file(s) not found.')
 
+    text_list = []
 
+
+    print('Parsing Article Text')
     # Parse article text files
     for text_path in [text_train_path, text_val_path]:
 
         text_df = parse_text(text_path)
 
-        # Save as csv
-        if text_path == 'text_train_path':
-            text_df.to_csv(DATA_INTERIM_PATH + 'text_train.csv', index=False)
-        elif text_path == 'text_val_path':
-            text_df.to_csv(DATA_INTERIM_PATH + 'text_val.csv', index=False)
+        text_list.append(text_df)
+
+    return text_list
 
 def parse_text(path):
-    
+
     text_cols = ['id', 'published-at', 'title']
 
     #try:
@@ -72,14 +88,14 @@ def parse_text(path):
 
     # Get data for columns
     xml_data = [[article.get('id'), article.get('published-at'), article.get('title')] 
-                for article in articles]
+                for article in tqdm(articles)]
 
     # Create dataframes
     text_df = pd.DataFrame(xml_data, columns=text_cols)
 
     # Get article text for each article
     article_text_list = []
-    for article in articles:
+    for article in tqdm(articles):
         text_string = article.get('title') + ' '
         for t in article.itertext():
             text_string += t
@@ -89,8 +105,6 @@ def parse_text(path):
     text_df['article_text'] = article_text_list
 
     return text_df
-    #except:
-        #print('Error: File either not XML or improperly formatted.')
 
 
 def merge_gt_text():
