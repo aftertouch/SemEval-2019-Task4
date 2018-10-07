@@ -1,5 +1,5 @@
 """
-@author: Negar
+@author: Negar, Jonathan
 """
 
 import pandas
@@ -21,6 +21,8 @@ def create_tfidf(trainFilePath, testFilePath):
 
     # Load training dataset
     train = pandas.read_csv(trainFilePath)
+
+    calculate_baseline(train)
 
     # Create bag of words
     vectorizer = CountVectorizer()
@@ -96,7 +98,7 @@ def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
             best_model_type = model_type
 
     # Print best results
-    print('Best model is {} with an accuracy score of {}'.format(model_dict[best_model_type], best_accuracy))
+    print('Best model is {} with an accuracy score of {:.4f}'.format(model_dict[best_model_type], best_accuracy))
 
     # Return best model and type
     return best_model, best_model_type
@@ -105,5 +107,13 @@ def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
 def evaluate_model(predicted, y_test):
     print(classification_report(y_test, predicted))
     accuracy = accuracy_score(y_test, predicted)
-    print('Accuracy: {}'.format(accuracy))
+    print('Accuracy: {:.4f}'.format(accuracy))
     return accuracy
+
+# Calculate baseline accuracy.
+def calculate_baseline(train):
+
+    # Get series counts of training data response. First item in value_counts will be
+    # the majority class. Normalize returns accuracy as a percentage.
+    baseline = train['hyperpartisan'].value_counts(normalize=True)[0]
+    print('Majority baseline accuracy is {:.4f}'.format(baseline))

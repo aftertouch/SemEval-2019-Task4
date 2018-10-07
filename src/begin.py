@@ -4,7 +4,7 @@
 
 from datatasks.parse_xml import parse_provided
 import datatasks.sample_data
-from models.models import create_tfidf, run_models
+from models.models import create_tfidf, run_models, calculate_baseline
 from sklearn.externals import joblib
 import os
 import glob
