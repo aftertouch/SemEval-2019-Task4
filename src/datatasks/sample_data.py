@@ -5,7 +5,6 @@
 import pandas as pd
 from math import floor
 from datatasks.preprocess import normalize_corpus
-from nltk.tokenize import RegexpTokenizer
 
 def sample_preprocess_data(DATA_PATH, n_samples, sample_size, train_or_val, save=False):
 

@@ -46,7 +46,7 @@ def main():
     val_path = glob.glob(DATA_PROCESSED_PATH + 'val*.csv')[0]
 
     # Create models and report results
-    model_list = ['nb', 'lr']
+    model_list = ['nb', 'lr', 'gb']
 
     # TFIDF
     X_train, X_test, y_train, y_test = create_tfidf(train_path, val_path)
