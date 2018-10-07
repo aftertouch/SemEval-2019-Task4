@@ -1,56 +1,109 @@
+"""
+@author: Negar
+"""
+
 import pandas
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, accuracy_score
 import numpy as np
-from sklearn import metrics
 
 
-def create_train_test_tfidf(trainFilePath, testFilePath):
+###
+#. Feature sets
+###
+
+# TF-IDF
+def create_tfidf(trainFilePath, testFilePath):
+
+    # Load training dataset
     train = pandas.read_csv(trainFilePath)
+
+    # Create bag of words
     vectorizer = CountVectorizer()
     text = train.preprocessed_text.tolist()
     bag_of_words = vectorizer.fit(text)
     bag_of_words = vectorizer.transform(text)
-    #tf and tfidf
+
+    # Create TF-IDF from bag of words
     tfidf_transformer = TfidfTransformer()
     X_train_tfidf = tfidf_transformer.fit_transform(bag_of_words)
+
+    # Store response variable
     y_train = train.hyperpartisan.tolist()
-    #X_train_tfidf.shape
-    #testing
+
+    # Load test dataset
     test = pandas.read_csv(testFilePath)
+
+    # Transform test set 
     testdata = test.preprocessed_text.tolist()
-    #newbag = vectorizer.fit(testdata)
     testbag = vectorizer.transform(testdata)
     X_test_tfidf = tfidf_transformer.transform(testbag)
+
+    # Store response variable
     y_test = test.hyperpartisan.tolist()
+
     return X_train_tfidf, X_test_tfidf, y_train, y_test
 
-def run_models(model_list, X_train, X_test, y_train, y_test):
+# Run all models. Takes a list of model types and data with a feature set
+def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
+
+    # Set random state
+    random_state = random_state
     
+    # Convenience translation dictionary for printing
     model_dict ={
         'nb' : 'Multinomial Naive Bayes',
-        'lr' : 'LogisticRegression',
-        'gb' : 'GradientBoostingClassifier'
-    } 
+        'lr' : 'Logistic Regression',
+        'gb' : 'Gradient Boosting Classifier'
+    }
+
+    # Initialize best model variables
+    best_model = ''
+    best_model_type = ''
+    best_accuracy = 0
     
+    # Iterate over list of model types
     for model_type in model_list:
+
+        # Naive Bayes
         if model_type == 'nb':
             clf = MultinomialNB().fit(X_train, y_train)
+
+        # Logistic Regression
         elif model_type == 'lr':
             clf = LogisticRegression(C=30.0, class_weight='balanced', solver='newton-cg', multi_class='multinomial', n_jobs=-1, random_state=40)
             clf.fit(X_train, y_train)
+
+        # Gradient Boosting
         elif model_type == 'gb':
             clf = GradientBoostingClassifier(n_estimators=170, max_depth=5, learning_rate=0.5, min_samples_leaf=3, min_samples_split=4).fit(X_train, y_train)
         else:
-            raise ValueError("No model type provided")        
+            raise ValueError("No model type provided")   
+
+        # Get predictions and evaluate     
         predicted = clf.predict(X_test)
         print(model_dict[model_type])
-        evaluate_model(predicted, y_test)
+        accuracy = evaluate_model(predicted, y_test)
 
+        # Update best performing model if necessary
+        if accuracy > best_accuracy:
+            best_accuracy = accuracy
+            best_model = clf
+            best_model_type = model_type
+
+    # Print best results
+    print('Best model is {} with an accuracy score of {}'.format(model_dict[best_model_type], best_accuracy))
+
+    # Return best model and type
+    return best_model, best_model_type
+
+# Evaluate models. Print classification report with precision, recall, f1, print accuracy, and return accuracy
 def evaluate_model(predicted, y_test):
-    #rint(predicted)
-    print(np.mean(predicted == y_test))
-    print(metrics.classification_report(y_test, predicted))
+    print(classification_report(y_test, predicted))
+    accuracy = accuracy_score(y_test, predicted)
+    print('Accuracy: {}'.format(accuracy))
+    return accuracy

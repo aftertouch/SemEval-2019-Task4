@@ -1,3 +1,7 @@
+"""
+@author: Jonathan
+"""
+
 import pandas as pd
 from math import floor
 from datatasks.preprocess import normalize_corpus

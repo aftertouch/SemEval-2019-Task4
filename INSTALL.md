@@ -2,7 +2,7 @@ Prerequisites:
     - Anaconda Python distribution: https://conda.io/docs/user-guide/install/index.html
     - Provided competition data
 
-- Navigate to the project directory using a terminal
+- Navigate to the project root directory using a terminal
 - Run 'mkdir data'
 - Run 'mkdir data/raw'
 - Navigate to the data/raw folder and unzip the contents of the provided zipped data file
