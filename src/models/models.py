@@ -82,7 +82,7 @@ def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
 
         # Gradient Boosting
         elif model_type == 'gb':
-            clf = GradientBoostingClassifier(learning_rate=0.7, max_depth=6, max_leaf_nodes=None, min_samples_leaf= 3, min_samples_split=2).fit(X_train, y_train)
+            clf = GradientBoostingClassifier(n_estimators=170, max_depth=5, learning_rate=0.5, min_samples_leaf=3, min_samples_split=4).fit(X_train, y_train)
         else:
             raise ValueError("No model type provided")   
 
