@@ -1,5 +1,5 @@
 """
-@author: Negar, Jonathan
+@author: Negar
 """
 
 import pandas
