@@ -73,16 +73,16 @@ def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
 
         # Naive Bayes
         if model_type == 'nb':
-            clf = MultinomialNB().fit(X_train, y_train)
+            clf = MultinomialNB(alpha=0.1).fit(X_train, y_train)
 
         # Logistic Regression
         elif model_type == 'lr':
-            clf = LogisticRegression(C=30.0, class_weight='balanced', solver='newton-cg', multi_class='multinomial', n_jobs=-1, random_state=40)
+            clf = LogisticRegression(C=30.0, class_weight='None', solver='newton-cg')
             clf.fit(X_train, y_train)
 
         # Gradient Boosting
         elif model_type == 'gb':
-            clf = GradientBoostingClassifier(n_estimators=170, max_depth=5, learning_rate=0.5, min_samples_leaf=3, min_samples_split=4).fit(X_train, y_train)
+            clf = GradientBoostingClassifier(learning_rate=0.7, max_depth=6, max_leaf_nodes=None, min_samples_leaf= 3, min_samples_split=2).fit(X_train, y_train)
         else:
             raise ValueError("No model type provided")   
 
