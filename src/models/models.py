@@ -1,5 +1,5 @@
 """
-@author: Negar
+@author: Negar, Jonathan (calculate_baseline)
 """
 
 import pandas
