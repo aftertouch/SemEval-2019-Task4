@@ -8,6 +8,7 @@ from models.models import create_tfidf, run_models, calculate_baseline
 from sklearn.externals import joblib
 import os
 import glob
+import models.plot
 
 def main():
 
@@ -45,12 +46,18 @@ def main():
     train_path = glob.glob(DATA_PROCESSED_PATH + 'train*.csv')[0]
     val_path = glob.glob(DATA_PROCESSED_PATH + 'val*.csv')[0]
 
-    # Create models and report results
-    model_list = ['nb', 'lr', 'gb']
-
     # TFIDF
     X_train, X_test, y_train, y_test = create_tfidf(train_path, val_path)
-    best_tfidf_model, best_tfidf_model_type = run_models(model_list, X_train, X_test, y_train, y_test, random_state=42)
+
+    # TFIDF LSA
+    models.plot.plot_LSA(X_train, y_train, title='TF-IDF LSA')
+
+    # Evaluate Models
+    model_list = ['nb', 'lr']
+    best_tfidf_model, best_tfidf_model_type, best_tfidf_model_predictions = run_models(model_list, X_train, X_test, y_train, y_test, random_state=42)
+
+    # Confusion Matrix
+    models.plot.plot_confusion_matrix(y_test, best_tfidf_model_predictions)
 
     # Serialize and save best model
     MODEL_PATH = '../model/'

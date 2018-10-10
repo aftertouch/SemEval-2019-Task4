@@ -66,6 +66,7 @@ def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
     # Initialize best model variables
     best_model = ''
     best_model_type = ''
+    best_model_predictions = None
     best_accuracy = 0
     
     # Iterate over list of model types
@@ -96,12 +97,13 @@ def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
             best_accuracy = accuracy
             best_model = clf
             best_model_type = model_type
+            best_model_predictions = predicted
 
     # Print best results
     print('Best model is {} with an accuracy score of {:.4f}'.format(model_dict[best_model_type], best_accuracy))
 
     # Return best model and type
-    return best_model, best_model_type
+    return best_model, best_model_type, best_model_predictions
 
 # Evaluate models. Print classification report with precision, recall, f1, print accuracy, and return accuracy
 def evaluate_model(predicted, y_test):
