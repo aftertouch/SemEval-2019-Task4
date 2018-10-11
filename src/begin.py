@@ -9,6 +9,7 @@ from sklearn.externals import joblib
 import os
 import glob
 import models.plot
+import models.EDA
 
 def main():
 
@@ -47,7 +48,7 @@ def main():
     val_path = glob.glob(DATA_PROCESSED_PATH + 'val*.csv')[0]
 
     # TFIDF
-    X_train, X_test, y_train, y_test = create_tfidf(train_path, val_path)
+    X_train, X_test, y_train, y_test, cv = create_tfidf(train_path, val_path)
 
     # TFIDF LSA
     models.plot.plot_LSA(X_train, y_train, title='TF-IDF LSA')
@@ -58,6 +59,10 @@ def main():
 
     # Confusion Matrix
     models.plot.plot_confusion_matrix(y_test, best_tfidf_model_predictions)
+
+    # Important Features
+    #importance = models.EDA.get_most_important_features(cv, best_tfidf_model, 10)
+    #models.plot.plot_important_words(importance, "Most important words for relevance")
 
     # Serialize and save best model
     MODEL_PATH = '../model/'
