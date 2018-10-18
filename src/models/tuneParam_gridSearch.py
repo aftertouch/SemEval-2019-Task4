@@ -2,29 +2,12 @@
 @author: Negar
 """
 import pandas
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.ensemble import GradientBoostingClassifier
 import numpy as np
 from sklearn import metrics
 from sklearn.grid_search import GridSearchCV
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
-
-
-def create_train_test_tfidf(trainFilePath):
-    train = pandas.read_csv(trainFilePath)
-    vectorizer = CountVectorizer(ngram_range=(1, 3))
-    text = train.preprocessed_text.tolist()
-    bag_of_words = vectorizer.fit(text)
-    bag_of_words = vectorizer.transform(text)
-    # tf and tfidf
-    tfidf_transformer = TfidfTransformer()
-    X_train_tfidf = tfidf_transformer.fit_transform(bag_of_words)
-    y_train = train.hyperpartisan.tolist()
-    # X_train_tfidf.shape
-
-    return X_train_tfidf, y_train
 
 
 def grid_search(model, param_grid, X, y, scorer='accuracy', n_jobs=3, cv=10):

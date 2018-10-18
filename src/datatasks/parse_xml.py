@@ -45,6 +45,7 @@ def parse_provided_gt(DATA_PATH):
         tree = et.parse(gt_path)
         root = tree.getroot()
         articles = root.findall('.//article')
+        #
 
         # Get data for columns
         xml_data = [[article.get('id'), article.get('hyperpartisan'), article.get('bias'), article.get('url'), article.get('labeled-by')] 
@@ -97,16 +98,41 @@ def parse_text(path):
     # Create dataframes
     text_df = pd.DataFrame(xml_data, columns=text_cols)
 
-    # Get article text for each article
-    article_text_list = []
+    # Get article text and links for each article
+    articles_text_list = []
+    external_links_lists = []
+    internal_links_lists = []
+
     for article in tqdm(articles):
         text_string = article.get('title') + ' '
         for t in article.itertext():
             text_string += t
-        article_text_list.append(text_string)
+        articles_text_list.append(text_string)
 
-    # Add article text column to dataframe
-    text_df['article_text'] = article_text_list
+            
+        external_links_dict = {}
+        internal_links_dict = {}
+
+        p_list = article.findall('p')
+
+        for p in p_list:
+            links = p.findall('a')
+            for a in links:
+                link = a.get('href')
+                text = a.text
+                if a.get('type') == 'external' and bool(link):
+                    if link[0] == '/':
+                        internal_links_dict[link] = text
+                    else:
+                        external_links_dict[link] = text
+                            
+        external_links_lists.append(external_links_dict)
+        internal_links_lists.append(internal_links_dict)
+
+    # Add article text and link columns to dataframe
+    text_df['article_text'] = articles_text_list
+    text_df['external_links'] = external_links_lists
+    text_df['internal_links'] = internal_links_lists
 
     return text_df
 

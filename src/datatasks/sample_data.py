@@ -14,9 +14,9 @@ def sample_preprocess_data(DATA_PATH, n_samples, sample_size, train_or_val, save
 
     # Load dataframe to sample
     if train_or_val == 'train':
-        df = pd.read_csv(DATA_INTERIM_PATH + 'train.csv')
+        df = pd.read_csv(DATA_INTERIM_PATH + 'train_c.csv')
     elif train_or_val == 'val':
-        df = pd.read_csv(DATA_INTERIM_PATH + 'val.csv')
+        df = pd.read_csv(DATA_INTERIM_PATH + 'val_c.csv')
     
     for i in range(n_samples):
         

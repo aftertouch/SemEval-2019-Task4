@@ -1,6 +1,5 @@
 """
 @author: Jonathan
-@credit: https://github.com/hundredblocks/concrete_NLP_tutorial/blob/master/NLP_notebook.ipynb
 """
 
 import numpy as np
@@ -12,11 +11,15 @@ import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.patches as mpatches
 
+# COLOR PALETTES
 COOL_LIST = ["#FF6AD5", "#C774E8", "#AD8CFF", "#8795E8", "#94D0FF"]
-COOL_LIST_MONO = ['#FFFFFF', "#AD8CFF"]
+COOL_PURPLE = '#AD8CFF'
+COOL_LIST_MONO = ['#FFFFFF', COOL_PURPLE]
 COOL_PAL = matplotlib.colors.ListedColormap(COOL_LIST)
 COOL_PAL_CONT_MONO = matplotlib.colors.LinearSegmentedColormap.from_list('cool', COOL_LIST_MONO)
 
+# Function to create Latent Semantic Analysis plot
+# @credit: https://github.com/hundredblocks/concrete_NLP_tutorial/blob/master/NLP_notebook.ipynb
 def plot_LSA(X_train, test_labels, plot=True, title='LSA'):
 
     fig = plt.figure(figsize=(16, 16))
@@ -38,6 +41,8 @@ def plot_LSA(X_train, test_labels, plot=True, title='LSA'):
 
     return lsa_scores
 
+# Function to create Confusion Matrix plot
+# @credit: https://github.com/hundredblocks/concrete_NLP_tutorial/blob/master/NLP_notebook.ipynb
 def plot_confusion_matrix(y_test, y_predicted_counts, normalize=False, title='Confusion Matrix'):
 
     fig = plt.figure(figsize=(8, 8))
@@ -64,7 +69,8 @@ def plot_confusion_matrix(y_test, y_predicted_counts, normalize=False, title='Co
     plt.xlabel('Predicted Label', fontsize=30)
     plt.show(block=True)
 
-
+# Function to plot largest coefficients of features of logistic regression model
+# @credit: https://github.com/hundredblocks/concrete_NLP_tutorial/blob/master/NLP_notebook.ipynb
 def plot_important_words(importance, title):
 
     top_scores = [a[0] for a in importance[0]['tops']]
@@ -88,18 +94,18 @@ def plot_important_words(importance, title):
     fig = plt.figure(figsize=(10, 10))  
 
     plt.subplot(121)
-    plt.barh(y_pos,bottom_scores, align='center', alpha=0.5)
+    plt.barh(y_pos,bottom_scores, align='center', color=COOL_PURPLE, alpha=0.5)
     plt.title('Non-HP', fontsize=20)
     plt.yticks(y_pos, bottom_words, fontsize=14)
     plt.suptitle('Key words', fontsize=16)
     plt.xlabel('Importance', fontsize=20)
     
     plt.subplot(122)
-    plt.barh(y_pos,top_scores, align='center', alpha=0.5)
+    plt.barh(y_pos,top_scores, align='center', color=COOL_PURPLE, alpha=0.5)
     plt.title('HP', fontsize=20)
     plt.yticks(y_pos, top_words, fontsize=14)
     plt.suptitle(title, fontsize=16)
     plt.xlabel('Importance', fontsize=20)
     
     plt.subplots_adjust(wspace=0.8)
-    plt.show()
+    plt.show(block=True)

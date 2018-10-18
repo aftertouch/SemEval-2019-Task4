@@ -1,10 +1,9 @@
 """
-@author: Negar, Jonathan (calculate_baseline)
+@author: Negar
 """
 
 import pandas
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
@@ -17,40 +16,34 @@ import numpy as np
 ###
 
 # TF-IDF
-def create_tfidf(trainFilePath, testFilePath):
+def create_tfidf(train, val):
 
-    # Load training dataset
-    train = pandas.read_csv(trainFilePath)
+    X_train = train['preprocessed_text']
+    y_train = train['hyperpartisan'].tolist()
 
-    calculate_baseline(train)
+    X_test = val['preprocessed_text']
+    y_test = val['hyperpartisan'].tolist()
 
-    # Create bag of words
-    vectorizer = CountVectorizer()
-    text = train.preprocessed_text.tolist()
-    bag_of_words = vectorizer.fit(text)
-    bag_of_words = vectorizer.transform(text)
+    X_train_tfidf, tfidf_vectorizer = tfidf(X_train)
+    X_test_tfidf = tfidf_vectorizer.transform(X_test)
 
-    # Create TF-IDF from bag of words
-    tfidf_transformer = TfidfTransformer()
-    X_train_tfidf = tfidf_transformer.fit_transform(bag_of_words)
 
-    # Store response variable
-    y_train = train.hyperpartisan.tolist()
+    return X_train_tfidf, X_test_tfidf, y_train, y_test, tfidf_vectorizer
 
-    # Load test dataset
-    test = pandas.read_csv(testFilePath)
 
-    # Transform test set 
-    testdata = test.preprocessed_text.tolist()
-    testbag = vectorizer.transform(testdata)
-    X_test_tfidf = tfidf_transformer.transform(testbag)
+# Convenience function to return TF-IDF vectorizer and fit-transformed data
+def tfidf(data):
+    tfidf_vectorizer = TfidfVectorizer()
 
-    # Store response variable
-    y_test = test.hyperpartisan.tolist()
+    train = tfidf_vectorizer.fit_transform(data)
 
-    return X_train_tfidf, X_test_tfidf, y_train, y_test
+    return train, tfidf_vectorizer
 
 # Run all models. Takes a list of model types and data with a feature set
+# Model types currently accepted:
+# 'lr' : Logistic Regression
+# 'nb' : Multinomial Naive Bayes
+# 'gb' : Gradient Boosting Classifier
 def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
 
     # Set random state
@@ -119,3 +112,5 @@ def calculate_baseline(train):
     # the majority class. Normalize returns accuracy as a percentage.
     baseline = train['hyperpartisan'].value_counts(normalize=True)[0]
     print('Majority baseline accuracy is {:.4f}'.format(baseline))
+
+    return baseline
