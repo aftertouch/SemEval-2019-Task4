@@ -72,9 +72,10 @@ def main():
     # Confusion Matrix
     models.plot.plot_confusion_matrix(y_test, best_tfidf_model_predictions)
 
-    # Important Features
-    importance = models.EDA.get_most_important_features(tfidf_vectorizer, best_tfidf_model, 10)
-    models.plot.plot_important_words(importance, "Most important words for relevance")
+    # Important Features for Logistic Regression
+    if best_tfidf_model == 'lr':
+        importance = models.EDA.get_most_important_features(tfidf_vectorizer, best_tfidf_model, 10)
+        models.plot.plot_important_words(importance, "Most important words for relevance")
 
     # Serialize and save best model
     MODEL_PATH = '../model/'

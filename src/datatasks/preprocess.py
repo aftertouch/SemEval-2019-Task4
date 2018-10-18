@@ -16,6 +16,7 @@ from datatasks.contractions import CONTRACTION_MAP
 import unicodedata
 from tqdm import tqdm
 
+# @credit: https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
 def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
                      accented_char_removal=True, text_lower_case=True, 
                      text_lemmatization=True, special_char_removal=True, 
@@ -59,73 +60,18 @@ def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
         normalized_corpus.append(doc)
         
     return normalized_corpus
-
-def detect_language(text):
-    """
-    Calculate probability of given text to be written in several languages and
-    return the highest scored.
-    
-    It uses a stopwords based approach, counting how many unique stopwords
-    are seen in analyzed text.
-    
-    @param text: Text whose language want to be detected
-    @type text: str
-    
-    @return: Most scored language guessed
-    @rtype: str
-    """
-
-    ratios = _calculate_languages_ratios(text)
-
-    most_rated_language = max(ratios, key=ratios.get)
-
-    return most_rated_language
-
-def _calculate_languages_ratios(text):
-    """
-    Calculate probability of given text to be written in several languages and
-    return a dictionary that looks like {'french': 2, 'spanish': 4, 'english': 0}
-    
-    @param text: Text whose language want to be detected
-    @type text: str
-    
-    @return: Dictionary with languages and unique stopwords seen in analyzed text
-    @rtype: dict
-    """
-
-    languages_ratios = {}
-
-    '''
-    nltk.wordpunct_tokenize() splits all punctuations into separate tokens
-    
-    >>> wordpunct_tokenize("That's thirty minutes away. I'll be there in ten.")
-    ['That', "'", 's', 'thirty', 'minutes', 'away', '.', 'I', "'", 'll', 'be', 'there', 'in', 'ten', '.']
-    '''
-
-    tokens = wordpunct_tokenize(text)
-    words = [word.lower() for word in tokens]
-
-    # Compute per language included in nltk number of unique stopwords appearing in analyzed text
-    for language in stopwords.fileids():
-        stopwords_set = set(stopwords.words(language))
-        words_set = set(words)
-        common_elements = words_set.intersection(stopwords_set)
-
-        languages_ratios[language] = len(common_elements) # language "score"
-
-    return languages_ratios
     
 
 # Remove accented characters
 # Sómě Áccěntěd těxt -> Some Accented text
-
+# @credit: https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
 def remove_accented_chars(text):
     text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore')
     return text
 
 # Expand contractions
 # Y'all can't expand contractions I'd think -> You all cannot expand contractions I would think
-
+# @credit: https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
 def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
     
     contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())), 
@@ -145,7 +91,7 @@ def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
 
 # Remove special characters, numeric removal optional
 # Well this was fun! What do you think? 123#@! -> Well this was fun What do you think
-
+# @credit: https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
 def remove_special_characters(text, remove_digits=False):
     pattern = r'[^a-zA-z0-9\s]' if not remove_digits else r'[^a-zA-z\s]'
     text = re.sub(pattern, '', text)
@@ -154,7 +100,7 @@ def remove_special_characters(text, remove_digits=False):
 # Simple stemming
 # My system keeps crashing his crashed yesterday, ours crashes daily ->
 # My system keep crash hi crash yesterday, our crash daili
-
+# @credit: https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
 def simple_stemmer(text):
     ps = nltk.porter.PorterStemmer()
     text = ' '.join([ps.stem(word) for word in text.split()])
@@ -163,7 +109,7 @@ def simple_stemmer(text):
 # Lemmatization
 # My system keeps crashing! his crashed yesterday, ours crashes daily ->
 # My system keep crash ! his crash yesterday , ours crash daily
-
+# @credit: https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
 def lemmatize_text(text, nlp):
     text = nlp(text)
     text = ' '.join([word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
@@ -172,7 +118,7 @@ def lemmatize_text(text, nlp):
 # Remove Stopwords
 # The, and, if are stopwords, computer is not -> , , stopwords , computer not
 # Note that 'no' and 'not' have been reintroduced as stopwords
-
+# @credit: https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
 def remove_stopwords(text, tokenizer, stopword_list, is_lower_case=False):
     tokens = tokenizer.tokenize(text)
     tokens = [token.strip() for token in tokens]

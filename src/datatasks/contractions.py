@@ -3,6 +3,7 @@
 Created on Mon Aug 01 01:11:02 2016
 
 @author: DIP
+@source: https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
 """
 
 CONTRACTION_MAP = {

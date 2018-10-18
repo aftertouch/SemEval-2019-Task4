@@ -6,21 +6,27 @@ import xml.etree.cElementTree as et
 import pandas as pd
 from tqdm import tqdm
 
+# Main function for parsing competition data
 def parse_provided(DATA_PATH):
 
+    # Get interim path
     DATA_INTERIM_PATH = DATA_PATH + 'interim/'
 
+    # Parse GT and Article files for train and val
     gt_list = parse_provided_gt(DATA_PATH)
     text_list = parse_provided_text(DATA_PATH)
 
+    # Merge GT and Article dataframes
     train = text_list[0].merge(gt_list[0], on='id')
     val = text_list[1].merge(gt_list[1], on='id')
 
     print('Saving')
 
+    # Save
     train.to_csv(DATA_INTERIM_PATH + 'train.csv', index=False)
     val.to_csv(DATA_INTERIM_PATH + 'val.csv', index=False)
 
+# Parse ground truth XML files
 def parse_provided_gt(DATA_PATH):
 
     # Get paths to data folders
@@ -33,6 +39,7 @@ def parse_provided_gt(DATA_PATH):
     except:
         print('Data file(s) not found.')
 
+    # Column names
     gt_cols = ['id', 'hyperpartisan', 'bias', 'url', 'labeled-by']
     gt_list = []
 
@@ -58,11 +65,13 @@ def parse_provided_gt(DATA_PATH):
 
     return gt_list
 
+# Parse article text XML files
 def parse_provided_text(DATA_PATH):
 
     # Get paths to data folders
     DATA_RAW_PATH = DATA_PATH + 'raw/'
 
+    # Check if data files exist
     try:
         text_train_path = DATA_RAW_PATH + 'articles-training-20180831.xml'
         text_val_path = DATA_RAW_PATH + 'articles-validation-20180831.xml'
@@ -82,8 +91,10 @@ def parse_provided_text(DATA_PATH):
 
     return text_list
 
+# Subfunction of parse_provided_text, contains XML parsing logic
 def parse_text(path):
 
+    # Define columns
     text_cols = ['id', 'published-at', 'title']
 
     #try:
@@ -103,23 +114,33 @@ def parse_text(path):
     external_links_lists = []
     internal_links_lists = []
 
+    # Iterate over articles
     for article in tqdm(articles):
+
+        # Get article title
         text_string = article.get('title') + ' '
+
+        # Append article text to article title
         for t in article.itertext():
             text_string += t
         articles_text_list.append(text_string)
 
-            
+        # Create empty dictionaries for links
         external_links_dict = {}
         internal_links_dict = {}
 
         p_list = article.findall('p')
 
+        # Iterate over paragraphs, find all links, then iterate over links per paragraph
         for p in p_list:
             links = p.findall('a')
             for a in links:
+
+                # Get link and link's text
                 link = a.get('href')
                 text = a.text
+
+                # Determine if link is internal or external
                 if a.get('type') == 'external' and bool(link):
                     if link[0] == '/':
                         internal_links_dict[link] = text
@@ -135,29 +156,3 @@ def parse_text(path):
     text_df['internal_links'] = internal_links_lists
 
     return text_df
-
-
-def merge_gt_text():
-
-    # Get interim data path
-    DATA_INTERIM_PATH = DATA_PATH + 'interim/'
-
-    try:
-        gt_train = pd.read_csv(DATA_INTERIM_PATH + 'gt_train.csv', dtype={'id' : str})
-        gt_val = pd.read_csv(DATA_INTERIM_PATH + 'gt_val.csv', dtype={'id' : str})
-    except:
-        print('Ground truth files not found. Have you run parse_xml.parse_gt()?')
-
-    try:
-        text_train = pd.read_csv(DATA_INTERIM_PATH + 'text_train.csv', dtype={'id' : str})
-        text_val = pd.read_csv(DATA_INTERIM_PATH + 'text_val.csv', dtype={'id' : str})
-    except:
-        print('Ground truth files not found. Have you run parse_xml.parse_gt()?')
-
-    # Merge text and ground truth dataframes into single train/val dataframes
-    train = text_train.merge(gt_train, on='id')
-    val = text_val.merge(gt_val, on='id')
-
-    # Save new data files as csv
-    train.to_csv(DATA_INTERIM_PATH + 'train.csv', index=False)
-    val.to_csv(DATA_INTERIM_PATH + 'val.csv', index=False)

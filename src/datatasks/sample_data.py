@@ -6,6 +6,7 @@ import pandas as pd
 from math import floor
 from datatasks.preprocess import normalize_corpus
 
+# Sample and preprocess the datasets
 def sample_preprocess_data(DATA_PATH, n_samples, sample_size, train_or_val, save=False):
 
     # Get the processed folder paths

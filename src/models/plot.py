@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.patches as mpatches
 
-# COLOR PALETTES
+# COLOR PALETTES - From Vapeplot package
 COOL_LIST = ["#FF6AD5", "#C774E8", "#AD8CFF", "#8795E8", "#94D0FF"]
 COOL_PURPLE = '#AD8CFF'
 COOL_LIST_MONO = ['#FFFFFF', COOL_PURPLE]
