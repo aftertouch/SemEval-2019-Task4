@@ -6,7 +6,7 @@ http://blog.alejandronolla.com/2013/05/15/detecting-text-language-with-python-an
 """
 
 import ast
-import tldextract
+from tldextract import extract
 import pandas as pd
 import pickle
 
