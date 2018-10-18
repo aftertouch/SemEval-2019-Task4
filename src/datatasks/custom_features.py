@@ -11,10 +11,10 @@ import pandas as pd
 import pickle
 
 # Main function for generating custom features
-def generate_custom_features(DATA_PATH):
+def generate_custom_features(DATA_PATH, UTIL_PATH):
 
     DATA_INTERIM_PATH = DATA_PATH + 'interim/'
-    DATA_EXTERNAL_PATH = DATA_PATH + 'external/'
+    UTIL_PATH = DATA_PATH + 'external/'
 
     # Load datasets
     train = pd.read_csv(DATA_INTERIM_PATH + 'train.csv')
@@ -31,7 +31,7 @@ def generate_custom_features(DATA_PATH):
     # TRAINING SET ONLY TASKS
 
     # Get biases for each link per article
-    train = domain_bias(train, DATA_EXTERNAL_PATH)
+    train = domain_bias(train, UTIL_PATH)
 
     # Save datasets
     print('Saving')

@@ -16,6 +16,7 @@ import pandas as pd
 def main():
 
     DATA_PATH = '../data/'
+    UTIL_PATH = '../util'
 
     # Create data subfolders if they do not exist
     data_folders = ['interim', 'processed', 'external']
@@ -36,7 +37,7 @@ def main():
 
     # Generate custom features
     print('Generating custom features')
-    generate_custom_features(DATA_PATH)
+    generate_custom_features(DATA_PATH, UTIL_PATH)
 
     DATA_PROCESSED_PATH = DATA_PATH + 'processed/'
 
