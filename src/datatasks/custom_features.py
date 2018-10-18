@@ -86,7 +86,7 @@ def external_links_bias(external_links, tlds) :
 # Extract article publisher (TLD)
 def tld(df):
 
-    df['domain'] = df.loc[:,'url'].apply(lambda x: tldextract.extract(x)[1])
+    df['domain'] = df.loc[:,'url'].apply(lambda x: extract(x)[1])
 
     return df
 
