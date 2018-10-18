@@ -14,7 +14,6 @@ import pickle
 def generate_custom_features(DATA_PATH, UTIL_PATH):
 
     DATA_INTERIM_PATH = DATA_PATH + 'interim/'
-    UTIL_PATH = DATA_PATH + 'external/'
 
     # Load datasets
     train = pd.read_csv(DATA_INTERIM_PATH + 'train.csv')
