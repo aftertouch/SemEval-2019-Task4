@@ -15,7 +15,7 @@ import numpy as np
 #. Feature sets
 ###
 
-# TF-IDF
+# bag of words - tfidf
 def create_tfidf(train, val):
 
     X_train = train['preprocessed_text']
@@ -24,14 +24,16 @@ def create_tfidf(train, val):
     X_test = val['preprocessed_text']
     y_test = val['hyperpartisan'].tolist()
 
+    # tfidf for training set
     X_train_tfidf, tfidf_vectorizer = tfidf(X_train)
+    # tfidf for test set - no need to fit for test set
     X_test_tfidf = tfidf_vectorizer.transform(X_test)
 
 
     return X_train_tfidf, X_test_tfidf, y_train, y_test, tfidf_vectorizer
 
 
-# Convenience function to return TF-IDF vectorizer and fit-transformed data
+# TF-IDF vectorizer and fit-transformed data
 def tfidf(data):
     tfidf_vectorizer = TfidfVectorizer()
 
@@ -39,11 +41,7 @@ def tfidf(data):
 
     return train, tfidf_vectorizer
 
-# Run all models. Takes a list of model types and data with a feature set
-# Model types currently accepted:
-# 'lr' : Logistic Regression
-# 'nb' : Multinomial Naive Bayes
-# 'gb' : Gradient Boosting Classifier
+# Run all models and print evaluation metrics for all classifiers and also find and print best model
 def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
 
     # Set random state
@@ -62,25 +60,25 @@ def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
     best_model_predictions = None
     best_accuracy = 0
     
-    # Iterate over list of model types
+    # Iterate over model_list
     for model_type in model_list:
 
-        # Naive Bayes
+        # Naive Bayes fit model
         if model_type == 'nb':
             clf = MultinomialNB(alpha=0.1).fit(X_train, y_train)
 
-        # Logistic Regression
+        # Logistic Regression fit model
         elif model_type == 'lr':
             clf = LogisticRegression(C=30.0, class_weight='None', solver='newton-cg')
             clf.fit(X_train, y_train)
 
-        # Gradient Boosting
+        # Gradient Boosting fit model
         elif model_type == 'gb':
             clf = GradientBoostingClassifier(n_estimators=170, max_depth=5, learning_rate=0.5, min_samples_leaf=3, min_samples_split=4).fit(X_train, y_train)
         else:
             raise ValueError("No model type provided")   
 
-        # Get predictions and evaluate     
+        # predictions and evaluations
         predicted = clf.predict(X_test)
         print(model_dict[model_type])
         accuracy = evaluate_model(predicted, y_test)
