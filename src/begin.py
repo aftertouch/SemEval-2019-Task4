@@ -36,8 +36,8 @@ def main():
         parse_provided(DATA_PATH)
 
     # Generate custom features
-    #print('Generating custom features')
-    #generate_custom_features(DATA_PATH, UTIL_PATH)
+    print('Generating custom features')
+    generate_custom_features(DATA_PATH, UTIL_PATH)
 
     DATA_PROCESSED_PATH = DATA_PATH + 'processed/'
 

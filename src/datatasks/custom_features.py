@@ -56,6 +56,8 @@ def domain_bias(train, path):
     # Create HP_links_count, nonHP_links_count, and unknown_links_count for each external link
     train[['HP_links_count', 'nonHP_links_count', 'unknown_links_count']] = train.loc[:,'external_links'].apply(external_links_bias, args=(tlds,))
 
+    return train
+
 # Sub-function of domain_bias to be applied to dataframe
 def external_links_bias(external_links, tlds) :
     
