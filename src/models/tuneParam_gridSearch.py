@@ -10,15 +10,19 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 
 
+# grid search to find the best parameters for the best accuracy with 10-fold cross validation on training set
 def grid_search(model, param_grid, X, y, scorer='accuracy', n_jobs=3, cv=10):
     grid = GridSearchCV(model, param_grid=param_grid, cv=cv, n_jobs=n_jobs,
                         scoring=scorer,
                         pre_dispatch=n_jobs)
 
-    fit_m = grid.fit(X, y)
+    # keep fitted model for future use -- not using it now TODO
+    fit_model = grid.fit(X, y)
     return grid.best_params_, grid.best_score_
 
 
+# Tune parameters for models and print best parameters
+# @credit: got parameters for Multinamial Naive Bayes and Gradient Boosting from https://github.com/Morgan243/CMSC516-SE-T8/blob/master/SemEvalEight/modeling/task1/task1_bag_of_words.py
 def tune_param(model_list, X_train, y_train):
     model_dict = {
         'nb': 'Multinomial Naive Bayes',
@@ -27,12 +31,15 @@ def tune_param(model_list, X_train, y_train):
     }
 
     for model_type in model_list:
+        # grid search on Multinamial Naive Bayes
         if model_type == 'nb':
             nb_best_params, nb_best_score = grid_search(MultinomialNB(),
                                                         param_grid=dict(alpha=[10 ** a for a in range(-3, 4, 1)]),
                                                         X=X_train, y=y_train)
             print(nb_best_params)
             print(nb_best_score)
+
+        # grid search on Logistic regression
         elif model_type == 'lr':
             lr_best_params, lr_best_score = grid_search(LogisticRegression(),
                                                         param_grid=dict(C=[0.001, 0.01, 0.1, 1, 10, 30, 100, 1000],
@@ -41,6 +48,8 @@ def tune_param(model_list, X_train, y_train):
                                                         X=X_train, y=y_train)
             print(lr_best_params)
             print(lr_best_score)
+
+        # grid search on Gradient Boosting
         elif model_type == 'gb':
             gb_best_params, gb_best_score = grid_search(GradientBoostingClassifier(),
                                                         param_grid=dict(
@@ -55,4 +64,4 @@ def tune_param(model_list, X_train, y_train):
         else:
             raise ValueError("No model type provided")
 
-    return nb_best_params, gb_best_params
+            # return nb_best_params, gb_best_params
