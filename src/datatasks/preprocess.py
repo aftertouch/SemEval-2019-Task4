@@ -3,7 +3,6 @@
 
 Credits: 
 https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
-http://blog.alejandronolla.com/2013/05/15/detecting-text-language-with-python-and-nltk/
 """
 
 import spacy

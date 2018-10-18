@@ -24,8 +24,8 @@ Additionally, Precision, Recall, and F1 scores are reported for the true class.
 
 ## Expected Input and Output
 
-This program only needs the source code and competition data to run. the Anaconda distribution of Python, as 
-well as an internet connection are required for setup.
+This program only needs the source code and competition data to run. The Anaconda distribution of Python, as 
+well as an internet connection are required for setup as well.
 
 Users can expect evaluation metric output for all currently implemented classifiers and feature sets, as well 
 as LSA plots of these feature spaces and a confusion matrix for the best classifier as output.

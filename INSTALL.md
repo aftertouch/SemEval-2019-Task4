@@ -1,8 +1,11 @@
 Prerequisites:
     - Internet connection
-    - Anaconda Python distribution: https://conda.io/docs/user-guide/install/index.html
     - Provided competition data
 
+- Install Anaconda python
+    - Commands can be found here: https://conda.io/docs/user-guide/install/index.html
+    - Linux users will run 'bash Anaconda-latest-Linux-x86_64.sh'
+- Unzip project somewhere on your computer
 - Navigate to the project root directory using a terminal
 - Run 'mkdir data'
 - Run 'mkdir data/raw'
