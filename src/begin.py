@@ -16,7 +16,7 @@ import pandas as pd
 def main():
 
     DATA_PATH = '../data/'
-    UTIL_PATH = '../util'
+    UTIL_PATH = '../util/'
 
     # Create data subfolders if they do not exist
     data_folders = ['interim', 'processed', 'external']
