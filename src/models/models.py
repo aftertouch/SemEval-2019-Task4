@@ -2,13 +2,14 @@
 @author: Negar
 """
 
-import pandas
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score
 import numpy as np
+from scipy.sparse import hstack
 
 
 ###
@@ -41,8 +42,21 @@ def tfidf(data):
 
     return train, tfidf_vectorizer
 
+#Takes a list of custom feature names to add to feature space 
+def create_custom_features(train, val, names):
+
+    X_custom = train[names]
+    y_custom = val[names]
+
+    return X_custom, y_custom
+
 # Run all models and print evaluation metrics for all classifiers and also find and print best model
-def run_models(model_list, X_train, X_test, y_train, y_test, random_state):
+def run_models(model_list, X_train, X_test, y_train, y_test, X_custom=None, y_custom=None, random_state=1):
+
+    # If custom features are passed, add them to training and validation data
+    if X_custom is not None and y_custom is not None:
+        X_train.append(X_custom)
+        y_train.append(y_custom)
 
     # Set random state
     random_state = random_state

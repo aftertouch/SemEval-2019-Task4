@@ -27,10 +27,7 @@ def generate_custom_features(DATA_PATH, UTIL_PATH):
         # Extract article publisher (TLD) from URL
         df = tld(df)
 
-    # TRAINING SET ONLY TASKS
-
-    # Get biases for each link per article
-    train = domain_bias(train, UTIL_PATH)
+        df = domain_bias(df, UTIL_PATH)
 
     # Save datasets
     print('Saving')

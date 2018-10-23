@@ -5,7 +5,7 @@
 from datatasks.parse_xml import parse_provided
 from datatasks.custom_features import generate_custom_features
 import datatasks.sample_data
-from models.models import create_tfidf, run_models, calculate_baseline
+from models.models import create_tfidf, create_custom_features run_models, calculate_baseline
 from sklearn.externals import joblib
 import os
 import glob
@@ -62,6 +62,10 @@ def main():
 
     # TFIDF
     X_train, X_test, y_train, y_test, tfidf_vectorizer = create_tfidf(train, val)
+
+    # Custom features
+    custom_feature_names = []
+    X_custom, y_custom = custom_features()
 
     # TFIDF LSA
     models.plot.plot_LSA(X_train, y_train, title='TF-IDF LSA')
