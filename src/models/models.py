@@ -8,8 +8,8 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score
+from sklearn.pipeline import Pipeline, FeatureUnion
 import numpy as np
-from scipy.sparse import hstack
 
 
 ###
@@ -42,21 +42,8 @@ def tfidf(data):
 
     return train, tfidf_vectorizer
 
-#Takes a list of custom feature names to add to feature space 
-def create_custom_features(train, val, names):
-
-    X_custom = train[names]
-    y_custom = val[names]
-
-    return X_custom, y_custom
-
 # Run all models and print evaluation metrics for all classifiers and also find and print best model
-def run_models(model_list, X_train, X_test, y_train, y_test, X_custom=None, y_custom=None, random_state=1):
-
-    # If custom features are passed, add them to training and validation data
-    if X_custom is not None and y_custom is not None:
-        X_train.append(X_custom)
-        y_train.append(y_custom)
+def run_models(feats, model_list, X_train, X_test, y_train, y_test, random_state=42):
 
     # Set random state
     random_state = random_state
@@ -79,21 +66,29 @@ def run_models(model_list, X_train, X_test, y_train, y_test, X_custom=None, y_cu
 
         # Naive Bayes fit model
         if model_type == 'nb':
-            clf = MultinomialNB(alpha=0.1).fit(X_train, y_train)
+            clf = MultinomialNB(alpha=0.1)
 
         # Logistic Regression fit model
         elif model_type == 'lr':
             clf = LogisticRegression(C=30.0, class_weight='None', solver='newton-cg')
-            clf.fit(X_train, y_train)
 
         # Gradient Boosting fit model
         elif model_type == 'gb':
-            clf = GradientBoostingClassifier(n_estimators=170, max_depth=5, learning_rate=0.5, min_samples_leaf=3, min_samples_split=4).fit(X_train, y_train)
+            clf = GradientBoostingClassifier(n_estimators=170, max_depth=5, learning_rate=0.5, min_samples_leaf=3, min_samples_split=4)
         else:
-            raise ValueError("No model type provided")   
+            raise ValueError("No model type provided")
+
+        # Create pipeline with selected features and classifier
+        pipeline = Pipeline([
+            ('features', feats),
+            ('classifier', clf)
+        ]) 
+
+        # Fit classifier
+        pipeline.fit(X_train, y_train)
 
         # predictions and evaluations
-        predicted = clf.predict(X_test)
+        predicted = pipeline.predict(X_test)
         print(model_dict[model_type])
         accuracy = evaluate_model(predicted, y_test)
 

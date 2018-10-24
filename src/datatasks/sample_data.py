@@ -6,8 +6,8 @@ import pandas as pd
 from math import floor
 from datatasks.preprocess import normalize_corpus
 
-# Sample and preprocess the datasets
-def sample_preprocess_data(DATA_PATH, n_samples, sample_size, train_or_val, save=False):
+# Sample the datasets
+def sample_data(DATA_PATH, n_samples, sample_size, train_or_val, preprocess=True, save=False):
 
     # Get the processed folder paths
     DATA_INTERIM_PATH = DATA_PATH + 'interim/'
@@ -37,12 +37,15 @@ def sample_preprocess_data(DATA_PATH, n_samples, sample_size, train_or_val, save
             # Randomly sample group's rows and append to sample df
             sample = df.loc[gps.groups[group],:].sample(n=nrows, random_state=1)
             df_sample = df_sample.append(sample)
-        
-        # Preprocess article text and append to sample dataframe
-        df_sample['preprocessed_text'] = normalize_corpus(df_sample['article_text'])
+
+        # Preprocess if necessary
+        if preprocess:
+            df_sample['preprocessed_text'] = normalize_corpus(df_sample['article_text'])
         
         # Reset index
         df_sample.reset_index(drop=True, inplace=True)
         
         # Save dataframe
         df_sample.to_csv(DATA_PROCESSED_PATH + train_or_val + str(sample_size) + '_' + str(i) + '.csv', index=False)
+
+    return df_sample

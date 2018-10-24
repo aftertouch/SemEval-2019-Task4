@@ -5,13 +5,14 @@
 from datatasks.parse_xml import parse_provided
 from datatasks.custom_features import generate_custom_features
 import datatasks.sample_data
-from models.models import create_tfidf, create_custom_features run_models, calculate_baseline
+from models.models import create_tfidf, run_models, calculate_baseline
 from sklearn.externals import joblib
 import os
 import glob
 import models.plot
 import models.EDA
 import pandas as pd
+from models.pipeline import make_features_pipeline
 
 def main():
 
@@ -35,19 +36,20 @@ def main():
         print('Parsing XML')
         parse_provided(DATA_PATH)
 
-    # Generate custom features
-    print('Generating custom features')
-    generate_custom_features(DATA_PATH, UTIL_PATH)
+    # Generate custom features if not already
+    if not os.path.exists(DATA_INTERIM_PATH + 'train_c.csv') or not os.path.exists(DATA_INTERIM_PATH + 'val_c.csv'):
+        print('Generating custom features')
+        generate_custom_features(DATA_PATH, UTIL_PATH)
 
     DATA_PROCESSED_PATH = DATA_PATH + 'processed/'
 
-    # Sample the datasets and preprocess
+    # Sample the datasets
     filepath = DATA_PROCESSED_PATH + '*.csv'
     if not glob.glob(filepath):
         print('Sampling and preprocessing training data')
-        datatasks.sample_data.sample_preprocess_data(DATA_PATH, 1, 10000, 'train', save=True)
+        datatasks.sample_data.sample_data(DATA_PATH, 1, 10000, 'train', save=True)
         print('Sampling and preprocessing validation data')
-        datatasks.sample_data.sample_preprocess_data(DATA_PATH, 1, 2500, 'val', save=True)
+        datatasks.sample_data.sample_data(DATA_PATH, 1, 2500, 'val', save=True)
 
     # Get training and test data
     train_path = glob.glob(DATA_PROCESSED_PATH + 'train*.csv')[0]
@@ -57,30 +59,24 @@ def main():
     train = pd.read_csv(train_path)
     val = pd.read_csv(val_path)
 
+    # Train test split
+    X_train = train.drop('hyperpartisan', axis=1)
+    y_train = train['hyperpartisan']
+    X_test = val.drop('hyperpartisan', axis=1)
+    y_test = val['hyperpartisan']
+
     # Calculate Baseline
     baseline = models.models.calculate_baseline(train)
 
-    # TFIDF
-    X_train, X_test, y_train, y_test, tfidf_vectorizer = create_tfidf(train, val)
-
-    # Custom features
-    custom_feature_names = []
-    X_custom, y_custom = custom_features()
-
-    # TFIDF LSA
-    models.plot.plot_LSA(X_train, y_train, title='TF-IDF LSA')
+    # Create Feature Union
+    feats = make_features_pipeline()
 
     # Evaluate Models
     model_list = ['nb', 'lr']
-    best_tfidf_model, best_tfidf_model_type, best_tfidf_model_predictions = run_models(model_list, X_train, X_test, y_train, y_test, random_state=42)
+    best_tfidf_model, best_tfidf_model_type, best_tfidf_model_predictions = run_models(feats, model_list, X_train, X_test, y_train, y_test)
 
     # Confusion Matrix
     models.plot.plot_confusion_matrix(y_test, best_tfidf_model_predictions)
-
-    # Important Features for Logistic Regression
-    if best_tfidf_model == 'lr':
-        importance = models.EDA.get_most_important_features(tfidf_vectorizer, best_tfidf_model, 10)
-        models.plot.plot_important_words(importance, "Most important words for relevance")
 
     # Serialize and save best model
     MODEL_PATH = '../model/'

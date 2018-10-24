@@ -24,10 +24,10 @@ def generate_custom_features(DATA_PATH, UTIL_PATH):
         # Get numbers of links
         df = strip_chars(df)
 
-        # Extract article publisher (TLD) from URL
-        df = tld(df)
-
         df = domain_bias(df, UTIL_PATH)
+
+    ## TRAIN ONLY TASKS
+    train = tld(train)
 
     # Save datasets
     print('Saving')
