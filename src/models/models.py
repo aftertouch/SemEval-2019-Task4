@@ -3,6 +3,8 @@
 """
 
 import pandas as pd
+import gensim
+from nltk.tokenize.toktok import ToktokTokenizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.naive_bayes import MultinomialNB
@@ -41,6 +43,46 @@ def tfidf(data):
     train = tfidf_vectorizer.fit_transform(data)
 
     return train, tfidf_vectorizer
+
+# Word embeddings
+# Credit: https://github.com/hundredblocks/concrete_NLP_tutorial/blob/master/NLP_notebook.ipynb
+def create_avg_word_embeddings(DATA_EXTERNAL_PATH, train, val):
+    
+    # Load pre-trained word embeddings
+    word2vec_path = DATA_EXTERNAL_PATH + 'GoogleNews-vectors-negative300.bin.gz'
+    word2vec = gensim.models.KeyedVectors.load_word2vec_format(word2vec_path, binary=True)
+    
+    # Create tokenizer
+    toktokenizer = ToktokTokenizer()
+    
+    # Create empty embeddings list
+    embeddings_list = []
+    
+    for df in [train, val]:
+        
+        # Tokenize
+        tokens = df['preprocessed_text'].str.lower().apply(lambda x: toktokenizer.tokenize(x))
+        
+        embeddings = df['tokens'].apply(lambda x: get_average_word2vec(x, vectors, generate_missing=generate_missing))
+        
+        embeddings_list.append(list(embeddings))
+        
+    return embeddings_list
+
+# Helper function for create_avg_word_embeddings
+# Credit: https://github.com/hundredblocks/concrete_NLP_tutorial/blob/master/NLP_notebook.ipynb
+def get_average_word2vec(tokens_list, vector, generate_missing=False, k=300):
+    if len(tokens_list)<1:
+        return np.zeros(k)
+    if generate_missing:
+        vectorized = [vector[word] if word in vector else np.random.rand(k) for word in tokens_list]
+    else:
+        vectorized = [vector[word] if word in vector else np.zeros(k) for word in tokens_list]
+    length = len(vectorized)
+    summed = np.sum(vectorized, axis=0)
+    averaged = np.divide(summed, length)
+    return averaged
+    
 
 # Run all models and print evaluation metrics for all classifiers and also find and print best model
 def run_models(feats, model_list, X_train, X_test, y_train, y_test, random_state=42):

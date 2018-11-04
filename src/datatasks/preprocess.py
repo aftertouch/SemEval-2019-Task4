@@ -8,8 +8,6 @@ https://towardsdatascience.com/a-practitioners-guide-to-natural-language-process
 import spacy
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
-from nltk.corpus import stopwords
-from nltk import wordpunct_tokenize
 import re
 from datatasks.contractions import CONTRACTION_MAP
 import unicodedata

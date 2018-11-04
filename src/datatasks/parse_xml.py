@@ -118,7 +118,7 @@ def parse_text(path):
     for article in tqdm(articles):
 
         # Get article title
-        text_string = article.get('title') + ' '
+        text_string = ''
 
         # Append article text to article title
         for t in article.itertext():

@@ -4,6 +4,8 @@
 
 from datatasks.parse_xml import parse_provided
 from datatasks.custom_features import generate_custom_features
+from datatasks.remove_articles import remove_articles
+from datatasks.new_preprocess import preprocess
 import datatasks.sample_data
 from models.models import create_tfidf, run_models, calculate_baseline
 from sklearn.externals import joblib
@@ -36,28 +38,24 @@ def main():
         print('Parsing XML')
         parse_provided(DATA_PATH)
 
-    # Generate custom features if not already
+    # Delete duplicate and nonenglish articles from training data
+    if not os.path.exists(DATA_INTERIM_PATH + 'train_reduced.csv'):
+        print('Deleting duplicate/nonenglish articles')
+        remove_articles(DATA_INTERIM_PATH)
+
+    # Generate custom features
     if not os.path.exists(DATA_INTERIM_PATH + 'train_c.csv') or not os.path.exists(DATA_INTERIM_PATH + 'val_c.csv'):
         print('Generating custom features')
-        generate_custom_features(DATA_PATH, UTIL_PATH)
+        generate_custom_features(DATA_INTERIM_PATH, UTIL_PATH)
 
-    DATA_PROCESSED_PATH = DATA_PATH + 'processed/'
-
-    # Sample the datasets
-    filepath = DATA_PROCESSED_PATH + '*.csv'
-    if not glob.glob(filepath):
-        print('Sampling and preprocessing training data')
-        datatasks.sample_data.sample_data(DATA_PATH, 1, 10000, 'train', save=True)
-        print('Sampling and preprocessing validation data')
-        datatasks.sample_data.sample_data(DATA_PATH, 1, 2500, 'val', save=True)
-
-    # Get training and test data
-    train_path = glob.glob(DATA_PROCESSED_PATH + 'train*.csv')[0]
-    val_path = glob.glob(DATA_PROCESSED_PATH + 'val*.csv')[0]
+    # Preprocess text
+    if not os.path.exists(DATA_INTERIM_PATH + 'train_p.csv') or not os.path.exists(DATA_INTERIM_PATH + 'val_p.csv'):
+        print('Preprocessing Text')
+        preprocess(DATA_INTERIM_PATH)
 
     # Load training and validation data
-    train = pd.read_csv(train_path)
-    val = pd.read_csv(val_path)
+    train = pd.read_csv(DATA_INTERIM_PATH + 'train_p.csv')
+    val = pd.read_csv(DATA_INTERIM_PATH + 'val_p.csv')
 
     # Train test split
     X_train = train.drop('hyperpartisan', axis=1)
@@ -66,13 +64,13 @@ def main():
     y_test = val['hyperpartisan']
 
     # Calculate Baseline
-    baseline = models.models.calculate_baseline(train)
+    baseline = calculate_baseline(train)
 
     # Create Feature Union
     feats = make_features_pipeline()
 
     # Evaluate Models
-    model_list = ['nb', 'lr']
+    model_list = ['lr']
     best_tfidf_model, best_tfidf_model_type, best_tfidf_model_predictions = run_models(feats, model_list, X_train, X_test, y_train, y_test)
 
     # Confusion Matrix
