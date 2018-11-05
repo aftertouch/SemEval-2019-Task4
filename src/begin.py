@@ -5,9 +5,10 @@
 from datatasks.parse_xml import parse_provided
 from datatasks.custom_features import generate_custom_features
 from datatasks.remove_articles import remove_articles
-from datatasks.new_preprocess import preprocess
-import datatasks.sample_data
-from models.models import create_tfidf, run_models, calculate_baseline
+from datatasks.new_preprocess import preprocess, tokenize
+from datatasks.sample_data import sample_data
+from models.feature_spaces import create_tfidf, create_avg_word_embeddings
+from models.models import run_models, calculate_baseline
 from sklearn.externals import joblib
 import os
 import glob
@@ -54,8 +55,18 @@ def main():
         preprocess(DATA_INTERIM_PATH)
 
     # Load training and validation data
+    print('Loading data')
     train = pd.read_csv(DATA_INTERIM_PATH + 'train_p.csv')
     val = pd.read_csv(DATA_INTERIM_PATH + 'val_p.csv')
+
+    # Optionally randomly sample datasets
+    sample=True
+    sample_size_train = 50000
+    sample_size_test = 10000
+    if sample:
+        print('Sampling data')
+        train = sample_data(train, sample_size_train, 'train')
+        val = sample_data(val, sample_size_train, 'val')
 
     # Train test split
     X_train = train.drop('hyperpartisan', axis=1)
@@ -63,14 +74,30 @@ def main():
     X_test = val.drop('hyperpartisan', axis=1)
     y_test = val['hyperpartisan']
 
-    # Calculate Baseline
-    baseline = calculate_baseline(train)
+
+    # Create Feature set for text
+
+    # Tokenize
+    print('Creating text feature set')
+    X_train = tokenize(X_train)
+    X_test = tokenize(X_test)
+
+    # Create text transformer
+    DATA_EXTERNAL_PATH = DATA_PATH + 'external/'
+    word2vec_path = DATA_EXTERNAL_PATH + 'GoogleNews-vectors-negative300.bin.gz'
+    avg_embeddings_transformer = create_avg_word_embeddings(word2vec_path)
 
     # Create Feature Union
-    feats = make_features_pipeline()
+    print('Creating feature union')
+    feats = make_features_pipeline(avg_embeddings_transformer, 'tokens')
+
+    # Calculate Baseline
+    print('Calculating baseline')
+    baseline = calculate_baseline(train)
 
     # Evaluate Models
     model_list = ['lr']
+    print('Evaluating models')
     best_tfidf_model, best_tfidf_model_type, best_tfidf_model_predictions = run_models(feats, model_list, X_train, X_test, y_train, y_test)
 
     # Confusion Matrix

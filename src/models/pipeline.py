@@ -8,11 +8,11 @@ from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.base import BaseEstimator, TransformerMixin
 
-def make_features_pipeline():
+def make_features_pipeline(TextTransformer, text_selector_key):
 
     text = Pipeline([
-        ('selector', TextSelector(key='preprocessed_text')),
-        ('tfidf', TfidfVectorizer( stop_words='english'))
+        ('selector', TextSelector(key=text_selector_key)),
+        ('text', TextTransformer)
     ])
 
     HP_links = Pipeline([

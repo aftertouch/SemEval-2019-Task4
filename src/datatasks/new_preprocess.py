@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import re
 from datatasks.contractions import CONTRACTION_MAP
+from nltk.tokenize.toktok import ToktokTokenizer
 
 def preprocess(DATA_INTERIM_PATH):
 
@@ -16,6 +17,14 @@ def preprocess(DATA_INTERIM_PATH):
     print('Saving')
     train.to_csv(DATA_INTERIM_PATH + 'train_p.csv', index=False)
     val.to_csv(DATA_INTERIM_PATH + 'val_p.csv', index=False)
+
+def tokenize(df):
+
+    tokenizer = ToktokTokenizer()
+
+    df['tokens'] = df['preprocessed_text'].str.lower().apply(lambda x: tokenizer.tokenize(x))
+
+    return df
 
 def add_title_to_article_text(article):
     if article['title'] is not np.nan:

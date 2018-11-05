@@ -4,48 +4,32 @@
 
 import pandas as pd
 from math import floor
-from datatasks.preprocess import normalize_corpus
 
 # Sample the datasets
-def sample_data(DATA_PATH, n_samples, sample_size, train_or_val, preprocess=True, save=False):
-
-    # Get the processed folder paths
-    DATA_INTERIM_PATH = DATA_PATH + 'interim/'
-    DATA_PROCESSED_PATH = DATA_PATH + 'processed/'
-
-    # Load dataframe to sample
-    if train_or_val == 'train':
-        df = pd.read_csv(DATA_INTERIM_PATH + 'train_p.csv')
-    elif train_or_val == 'val':
-        df = pd.read_csv(DATA_INTERIM_PATH + 'val_p.csv')
+def sample_data(df, sample_size, train_or_val, random_state=1, save=False):
+        
+    # Create empty sample dataframe
+    df_sample = pd.DataFrame()
     
-    for i in range(n_samples):
+    # Get bias column distribution
+    bias = df['bias'].value_counts(normalize=True)
+    gps = df.groupby('bias')
+    
+    # Iterate over bias groups
+    for group in gps.groups.keys():
         
-        # Create empty sample dataframe
-        df_sample = pd.DataFrame()
+        # Get number of rows from df to sample
+        nrows = floor(sample_size*bias[group])
         
-        # Get bias column distribution
-        bias = df['bias'].value_counts(normalize=True)
-        gps = df.groupby('bias')
-        
-        # Iterate over bias groups
-        for group in gps.groups.keys():
-            
-            # Get number of rows from df to sample
-            nrows = floor(sample_size*bias[group])
-            
-            # Randomly sample group's rows and append to sample df
-            sample = df.loc[gps.groups[group],:].sample(n=nrows, random_state=1)
-            df_sample = df_sample.append(sample)
-
-        # Preprocess if necessary
-        if preprocess:
-            df_sample['preprocessed_text'] = normalize_corpus(df_sample['article_text'])
-        
-        # Reset index
-        df_sample.reset_index(drop=True, inplace=True)
-        
-        # Save dataframe
+        # Randomly sample group's rows and append to sample df
+        sample = df.loc[gps.groups[group],:].sample(n=nrows, random_state=random_state)
+        df_sample = df_sample.append(sample)
+    
+    # Reset index
+    df_sample.reset_index(drop=True, inplace=True)
+    
+    # Save dataframe
+    if save:
         df_sample.to_csv(DATA_PROCESSED_PATH + train_or_val + str(sample_size) + '_' + str(i) + '.csv', index=False)
 
     return df_sample

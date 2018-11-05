@@ -30,16 +30,16 @@ def generate_custom_features(DATA_INTERIM_PATH, UTIL_PATH):
 
 
 # Get bias for each linked domain in article
-def domain_bias(train, path):
+def domain_bias(df, path):
 
     # Load bias mapping
     pickle_in = open(path + "tld.pickle","rb")
     tlds = pickle.load(pickle_in)
 
     # Create HP_links_count, nonHP_links_count, and unknown_links_count for each external link
-    train[['HP_links_count', 'nonHP_links_count', 'unknown_links_count']] = train.loc[:,'external_links'].apply(external_links_bias, args=(tlds,))
+    df[['HP_links_count', 'nonHP_links_count', 'unknown_links_count']] = df.loc[:,'external_links'].apply(external_links_bias, args=(tlds,))
 
-    return train
+    return df
 
 # Sub-function of domain_bias to be applied to dataframe
 def external_links_bias(external_links, tlds) :

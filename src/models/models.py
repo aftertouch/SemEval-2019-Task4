@@ -4,7 +4,6 @@
 
 import pandas as pd
 import gensim
-from nltk.tokenize.toktok import ToktokTokenizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.naive_bayes import MultinomialNB
@@ -126,6 +125,7 @@ def run_models(feats, model_list, X_train, X_test, y_train, y_test, random_state
             ('classifier', clf)
         ]) 
 
+        print(X_train.shape, y_train.shape)
         # Fit classifier
         pipeline.fit(X_train, y_train)
 
