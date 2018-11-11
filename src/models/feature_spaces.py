@@ -1,10 +1,10 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.base import TransformerMixin, BaseEstimator
-import numpy as np
 import gensim
+import numpy as np
+from sklearn.base import TransformerMixin, BaseEstimator
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 def create_tfidf(fit=False, X_train=None, X_test=None):
-
     tfidf_vectorizer = TfidfVectorizer()
 
     if fit:
@@ -15,8 +15,8 @@ def create_tfidf(fit=False, X_train=None, X_test=None):
 
     return tfidf_vectorizer
 
-def create_avg_word_embeddings(vectors_path, generate_missing=False, k=300, fit=False, X_train=None, X_test=None):
 
+def create_avg_word_embeddings(vectors_path, generate_missing=False, k=300, fit=False, X_train=None, X_test=None):
     vectors = gensim.models.KeyedVectors.load_word2vec_format(vectors_path, binary=True)
 
     avg_word_embeddings_transformer = AvgWordEmbeddingsTransformer(vectors, generate_missing)
@@ -29,6 +29,7 @@ def create_avg_word_embeddings(vectors_path, generate_missing=False, k=300, fit=
 
     return avg_word_embeddings_transformer
 
+
 class AvgWordEmbeddingsTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, vectors, generate_missing=True, k=300):
@@ -40,12 +41,12 @@ class AvgWordEmbeddingsTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
-
         embeddings = X.apply(lambda x: get_average_word2vec(x, self.vectors, generate_missing=self.generate_missing))
         return list(embeddings)
 
+
 def get_average_word2vec(tokens_list, vector, generate_missing=False, k=300):
-    if len(tokens_list)<1:
+    if len(tokens_list) < 1:
         return np.zeros(k)
     if generate_missing:
         vectorized = [vector[word] if word in vector else np.random.rand(k) for word in tokens_list]

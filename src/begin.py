@@ -2,23 +2,24 @@
 @author: Jonathan
 """
 
-from datatasks.parse_xml import parse_provided
-from datatasks.custom_features import generate_custom_features
-from datatasks.remove_articles import remove_articles
-from datatasks.new_preprocess import preprocess, tokenize
-from datatasks.sample_data import sample_data
-from models.feature_spaces import create_tfidf, create_avg_word_embeddings
-from models.models import run_models, calculate_baseline
-from sklearn.externals import joblib
 import os
-import glob
-import models.plot
-import models.EDA
+
 import pandas as pd
+from sklearn.externals import joblib
+
+import models.EDA
+import models.plot
+from datatasks.custom_features import generate_custom_features
+from datatasks.preprocess import preprocess, tokenize
+from datatasks.parse_xml import parse_provided
+from datatasks.remove_articles import remove_articles
+from datatasks.sample_data import sample_data
+from models.feature_spaces import create_avg_word_embeddings
+from models.models import run_models, calculate_baseline
 from models.pipeline import make_features_pipeline
 
-def main():
 
+def main():
     DATA_PATH = '../data/'
     UTIL_PATH = '../util/'
 
@@ -60,20 +61,19 @@ def main():
     val = pd.read_csv(DATA_INTERIM_PATH + 'val_p.csv')
 
     # Optionally randomly sample datasets
-    sample=True
+    sample = True
     sample_size_train = 50000
     sample_size_test = 10000
     if sample:
         print('Sampling data')
         train = sample_data(train, sample_size_train, 'train')
-        val = sample_data(val, sample_size_train, 'val')
+        val = sample_data(val, sample_size_test, 'val')
 
     # Train test split
     X_train = train.drop('hyperpartisan', axis=1)
     y_train = train['hyperpartisan']
     X_test = val.drop('hyperpartisan', axis=1)
     y_test = val['hyperpartisan']
-
 
     # Create Feature set for text
 
@@ -98,7 +98,8 @@ def main():
     # Evaluate Models
     model_list = ['lr']
     print('Evaluating models')
-    best_tfidf_model, best_tfidf_model_type, best_tfidf_model_predictions = run_models(feats, model_list, X_train, X_test, y_train, y_test)
+    best_tfidf_model, best_tfidf_model_type, best_tfidf_model_predictions = run_models(feats, model_list, X_train,
+                                                                                       X_test, y_train, y_test)
 
     # Confusion Matrix
     models.plot.plot_confusion_matrix(y_test, best_tfidf_model_predictions)
@@ -106,6 +107,7 @@ def main():
     # Serialize and save best model
     MODEL_PATH = '../model/'
     joblib.dump(best_tfidf_model, MODEL_PATH + 'tfidf_' + best_tfidf_model_type + '.joblib')
+
 
 if __name__ == '__main__':
     main()

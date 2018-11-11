@@ -9,11 +9,11 @@ import pandas as pd
 from nltk import wordpunct_tokenize
 from nltk.corpus import stopwords
 
-# Remove articles which should not be in the training set
-def remove_articles(DATA_INTERIM_PATH):
 
+# Remove articles which should not be in the training set
+def remove_articles(data_interim_path):
     # Read training data
-    train = pd.read_csv(DATA_INTERIM_PATH + 'train.csv')
+    train = pd.read_csv(data_interim_path + 'train.csv')
 
     # Drop duplicate articles containing identical URLs
     train = train.drop_duplicates(subset='url', keep='first')
@@ -30,7 +30,8 @@ def remove_articles(DATA_INTERIM_PATH):
     train.reset_index(inplace=True)
 
     # Save reduced training set
-    train.to_csv(DATA_INTERIM_PATH + 'train_reduced.csv', index=False)
+    train.to_csv(data_interim_path + 'train_reduced.csv', index=False)
+
 
 # @credit: http://blog.alejandronolla.com/2013/05/15/detecting-text-language-with-python-and-nltk/
 def detect_language(text):
@@ -86,6 +87,6 @@ def _calculate_languages_ratios(text):
         words_set = set(words)
         common_elements = words_set.intersection(stopwords_set)
 
-        languages_ratios[language] = len(common_elements) # language "score"
+        languages_ratios[language] = len(common_elements)  # language "score"
 
     return languages_ratios

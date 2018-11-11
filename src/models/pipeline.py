@@ -4,12 +4,11 @@
 https://www.kaggle.com/baghern/a-deep-dive-into-sklearn-pipelines
 """
 
-from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import Pipeline, FeatureUnion
 
-def make_features_pipeline(TextTransformer, text_selector_key):
 
+def make_features_pipeline(TextTransformer, text_selector_key, custom_features=True):
     text = Pipeline([
         ('selector', TextSelector(key=text_selector_key)),
         ('text', TextTransformer)
@@ -23,19 +22,26 @@ def make_features_pipeline(TextTransformer, text_selector_key):
         ('selector', NumberSelector(key='nonHP_links_count'))
     ])
 
-    feats = FeatureUnion([
-        ('text', text),
-        ('HP_links', HP_links),
-        ('nonHP_links', nonHP_links)
-    ])
+    if custom_features:
+        feats = FeatureUnion([
+            ('text', text),
+            ('HP_links', HP_links),
+            ('nonHP_links', nonHP_links)
+        ])
+    else:
+        feats = FeatureUnion([
+            ('text', text)
+        ])
 
     return feats
+
 
 class TextSelector(BaseEstimator, TransformerMixin):
     """
     Transformer to select a single column from the data frame to perform additional transformations on
     Use on text columns in the data
     """
+
     def __init__(self, key):
         self.key = key
 
@@ -44,12 +50,14 @@ class TextSelector(BaseEstimator, TransformerMixin):
 
     def transform(self, X):
         return X[self.key]
-    
+
+
 class NumberSelector(BaseEstimator, TransformerMixin):
     """
     Transformer to select a single column from the data frame to perform additional transformations on
     Use on numeric columns in the data
     """
+
     def __init__(self, key):
         self.key = key
 

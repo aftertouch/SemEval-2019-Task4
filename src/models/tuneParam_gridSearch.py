@@ -1,13 +1,11 @@
 """
 @author: Negar
 """
-import pandas
-from sklearn.ensemble import GradientBoostingClassifier
 import numpy as np
-from sklearn import metrics
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.grid_search import GridSearchCV
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import MultinomialNB
 
 
 # grid search to find the best parameters for the best accuracy with 10-fold cross validation on training set
