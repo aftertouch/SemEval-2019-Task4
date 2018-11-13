@@ -15,6 +15,8 @@ def sample_data(df, sample_size, train_or_val, save=False):
 
     # Get bias column distribution
     bias = df['bias'].value_counts(normalize=True)
+
+    # Group dataframe by bias
     gps = df.groupby('bias')
 
     # Iterate over bias groups
