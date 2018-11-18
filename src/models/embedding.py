@@ -21,7 +21,7 @@ def readData(filePath):
     text = data.preprocessed_text.tolist()
     return text
 
-
+# tokenization
 def tokenizing_text(text):
     i = 0
     tokenized_texts = []
@@ -32,7 +32,7 @@ def tokenizing_text(text):
         i = i + 1
     return tokenized_texts
 
-
+# tag each document
 def tag_documents(tokenized_texts):
     tagedDocuments = [TaggedDocument(doc, [i]) for i, doc in enumerate(tokenized_texts)]
     return tagedDocuments
@@ -56,6 +56,24 @@ def infer_vectors_from_embdModel(model, documents):
         j = j + 1
     return vectors
 
+
+
+# steps to get embedding vectors
+#trainProcText = readData("C:/Users/Negar/Downloads/train10000_0.csv")
+#testProcText = readData("C:/Users/Negar/Downloads/val2500_0.csv")
+
+#tokenizedTrain = tokenizing_text(trainProcText)
+#tokenizedTest = tokenizing_text(testProcText)
+
+#trainTagDocuments = tag_documents(tokenizedTrain)
+#model = train_embd_model(trainTagDocuments)
+
+#testTagDocuments = tag_documents(tokenizedTest)
+
+#trainVectors = infer_vectors_from_embdModel(model, trainTagDocuments)
+#testVectors = infer_vectors_from_embdModel(model, testTagDocuments)
+
+
 # train classifiers with embedding vectors
 #clf = LogisticRegression(C=30.0, class_weight='None', solver='newton-cg')
 #clf.fit(vectors, y_train) #X_train === vectors
@@ -64,4 +82,3 @@ def infer_vectors_from_embdModel(model, documents):
 #predicted = clf.predict(testvectors)
 #accuracy = accuracy_score(y_test, predicted)
 #print(accuracy)
-
