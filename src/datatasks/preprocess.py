@@ -24,6 +24,7 @@ def preprocess(data_interim_path):
 def normalize_text(text):
     text = replace_html_stuff(text)
     text = expand_contractions(text)
+    text = mask_numbers(text)
     text = remove_special_characters(text)
     text = remove_extra_whitespace(text)
     text = text.lower()
@@ -79,6 +80,14 @@ def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
     expanded_text = re.sub("'", "", expanded_text)
     return expanded_text
 
+def mask_numbers(text):
+    text = re.sub('[0-9]{5,}', '#####', text)
+    text = re.sub('[0-9]{4}', '####', text)
+    text = re.sub('[0-9]{3}', '###', text)
+    text = re.sub('[0-9]{2}', '##', text)
+
+    return text
+
 
 def remove_special_characters(text, remove_digits=False):
     pattern = r'[^a-zA-z0-9\s]' if not remove_digits else r'[^a-zA-z\s]'
@@ -94,6 +103,6 @@ def remove_extra_whitespace(text):
 def tokenize(text):
     tokenizer = ToktokTokenizer()
 
-    tokens = text.apply(lambda x: tokenizer.tokenize(x))
+    tokens = tokenizer.tokenize(text)
 
     return tokens

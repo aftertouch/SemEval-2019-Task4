@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3043b954-c566-4ced-952b-7a3e6737c785" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/notebooks/Political-Label.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/Political-Label.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/is_political.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/util/is_political.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/11-7-more-preprocessing.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/11-7-more-preprocessing.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/begin.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/begin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datatasks/parse_xml.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatasks/parse_xml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datatasks/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatasks/preprocess.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datatasks/remove_articles.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatasks/remove_articles.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,20 +19,20 @@
     <session id="2001870114">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="7" />
+          <entry key="project.closed" value="9" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.open.time.8" value="2" />
-          <entry key="project.opened" value="9" />
+          <entry key="project.open.time.8" value="4" />
+          <entry key="project.opened" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="ipynb" value="8" />
           <entry key="md" value="1" />
-          <entry key="py" value="20" />
+          <entry key="py" value="24" />
           <entry key="sh" value="1" />
         </counts>
       </usages-collector>
@@ -37,20 +41,20 @@
           <entry key="Bash" value="1" />
           <entry key="IPNB" value="8" />
           <entry key="Markdown" value="1" />
-          <entry key="Python" value="20" />
+          <entry key="Python" value="24" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="91" />
-          <entry key="py" value="1528" />
+          <entry key="py" value="1782" />
           <entry key="txt" value="61" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="152" />
-          <entry key="Python" value="1528" />
+          <entry key="Python" value="1782" />
         </counts>
       </usages-collector>
     </session>
@@ -60,8 +64,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/datatasks/custom_features.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="51" column="31" lean-forward="true" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
+            <state relative-caret-position="705">
+              <caret line="51" column="31" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -69,8 +73,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/begin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="16">
-              <caret line="67" column="22" lean-forward="true" selection-start-line="67" selection-start-column="22" selection-end-line="67" selection-end-column="22" />
+            <state relative-caret-position="511">
+              <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+              <folding>
+                <element signature="e#27#36#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/datatasks/remove_articles.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="421">
+              <caret line="87" selection-start-line="87" selection-end-line="87" />
             </state>
           </provider>
         </entry>
@@ -90,8 +106,29 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/models/pipeline.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="18" column="6" lean-forward="true" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
+            <state relative-caret-position="180">
+              <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/models/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/models/feature_spaces.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="375">
+              <caret line="25" column="54" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -99,8 +136,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/datatasks/preprocess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="27" column="40" lean-forward="true" selection-start-line="27" selection-start-column="40" selection-end-line="27" selection-end-column="40" />
+            <state relative-caret-position="360">
+              <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
+              <folding>
+                <marker date="1542904309237" expanded="true" signature="2544:2739" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/datatasks/parse_xml.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
             </state>
           </provider>
         </entry>
@@ -114,15 +163,15 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/datatasks/new_preprocess.py" />
-        <option value="$PROJECT_DIR$/src/begin.py" />
         <option value="$PROJECT_DIR$/src/datatasks/custom_features.py" />
-        <option value="$PROJECT_DIR$/src/datatasks/parse_xml.py" />
-        <option value="$PROJECT_DIR$/src/datatasks/remove_articles.py" />
-        <option value="$PROJECT_DIR$/src/datatasks/preprocess.py" />
         <option value="$PROJECT_DIR$/src/externals/bias_list.py" />
         <option value="$PROJECT_DIR$/notebooks/11-11-examine-df-tlds-not-in-bias-list.ipynb" />
         <option value="$PROJECT_DIR$/src/datatasks/sample_data.py" />
         <option value="$PROJECT_DIR$/src/models/pipeline.py" />
+        <option value="$PROJECT_DIR$/src/datatasks/parse_xml.py" />
+        <option value="$PROJECT_DIR$/src/datatasks/remove_articles.py" />
+        <option value="$PROJECT_DIR$/src/datatasks/preprocess.py" />
+        <option value="$PROJECT_DIR$/src/begin.py" />
       </list>
     </option>
   </component>
@@ -134,7 +183,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="1680" />
+    <option name="width" value="1610" />
     <option name="height" value="1027" />
   </component>
   <component name="ProjectView">
@@ -281,10 +330,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1680" height="1027" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1610" height="1027" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49499" visible="true" weight="0.13492064" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49499" visible="true" weight="0.1434949" />
       <window_info id="Structure" order="1" sideWeight="0.50501" side_tool="true" weight="0.13369964" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -295,7 +343,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32941177" />
-      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.12941177" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.30695188" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.20855615" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -305,7 +353,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="right" id="R Packages" order="4" />
-      <window_info anchor="right" x="0" y="0" width="220" height="827" id="Documentation" order="5" side_tool="true" weight="0.10561661" />
+      <window_info anchor="right" x="0" y="0" width="220" height="827" id="Documentation" order="5" side_tool="true" visible="true" weight="0.11033163" />
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="right" id="SciView" order="7" />
     </layout>
@@ -362,13 +410,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/datatasks/old_preprocess.py" />
-    <entry file="file://$PROJECT_DIR$/src/datatasks/parse_xml.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1692">
-          <caret line="120" column="29" lean-forward="true" selection-start-line="120" selection-start-column="29" selection-end-line="120" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/notebooks/11-6-publishers-in-val-not-train.ipynb">
       <provider selected="true" editor-type-id="ipnb-editor">
         <state>
@@ -397,10 +438,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/datatasks/remove_articles.py">
+    <entry file="file://$PROJECT_DIR$/src/datatasks/custom_features.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="26" column="27" lean-forward="true" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="27" />
+        <state relative-caret-position="705">
+          <caret line="51" column="31" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -416,29 +457,59 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/models/pipeline.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="18" column="6" lean-forward="true" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
+        <state relative-caret-position="180">
+          <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/datatasks/custom_features.py">
+    <entry file="file://$PROJECT_DIR$/src/models/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="51" column="31" lean-forward="true" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
+        <state relative-caret-position="180">
+          <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/datatasks/remove_articles.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="421">
+          <caret line="87" selection-start-line="87" selection-end-line="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/models/feature_spaces.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="54" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/datatasks/parse_xml.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/begin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16">
-          <caret line="67" column="22" lean-forward="true" selection-start-line="67" selection-start-column="22" selection-end-line="67" selection-end-column="22" />
+        <state relative-caret-position="511">
+          <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+          <folding>
+            <element signature="e#27#36#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/datatasks/preprocess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="27" column="40" lean-forward="true" selection-start-line="27" selection-start-column="40" selection-end-line="27" selection-end-column="40" />
+        <state relative-caret-position="360">
+          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
+          <folding>
+            <marker date="1542904309237" expanded="true" signature="2544:2739" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>

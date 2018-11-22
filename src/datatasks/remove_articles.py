@@ -11,23 +11,24 @@ from nltk.corpus import stopwords
 
 
 # Remove articles which should not be in the training set
-def remove_articles(data_interim_path):
+def remove_articles(data_interim_path, remove_nonenglish=False):
     # Read training data
     train = pd.read_csv(data_interim_path + 'train.csv')
 
     # Drop duplicate articles containing identical URLs
     train = train.drop_duplicates(subset='url', keep='first')
 
-    # Detect language for each article using stopword ratios
-    train['language'] = train['article_text'].apply(detect_language)
+    if remove_nonenglish:
+        # Detect language for each article using stopword ratios
+        train['language'] = train['article_text'].apply(detect_language)
 
-    # Drop all nonenglish articles from dataframe
-    # Of note, many English articles are flagged as nonenglish, however,
-    # most of them are non-content articles like lists of scores and are
-    # almost entirely noise
-    train = train[train['language'] == 'english']
-    train.drop('language', axis=1, inplace=True)
-    train.reset_index(inplace=True)
+        # Drop all nonenglish articles from dataframe
+        # Of note, many English articles are flagged as nonenglish, however,
+        # most of them are non-content articles like lists of scores and are
+        # almost entirely noise
+        train = train[train['language'] == 'english']
+        train.drop('language', axis=1, inplace=True)
+        train.reset_index(inplace=True)
 
     # Save reduced training set
     train.to_csv(data_interim_path + 'train_reduced.csv', index=False)

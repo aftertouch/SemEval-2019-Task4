@@ -10,11 +10,11 @@ from sklearn.externals import joblib
 import models.EDA
 import models.plot
 from datatasks.custom_features import generate_custom_features
-from datatasks.preprocess import preprocess, tokenize
+from datatasks.preprocess import preprocess
 from datatasks.parse_xml import parse_provided
 from datatasks.remove_articles import remove_articles
 from datatasks.sample_data import sample_data
-from models.feature_spaces import create_avg_word_embeddings
+from models.feature_spaces import create_tfidf
 from models.models import run_models, calculate_baseline
 from models.pipeline import make_features_pipeline
 
@@ -62,7 +62,7 @@ def main():
 
     # Optionally randomly sample datasets
     sample = True
-    sample_size_train = 50000
+    sample_size_train = 100000
     sample_size_test = 10000
     if sample:
         print('Sampling data')
@@ -77,19 +77,10 @@ def main():
 
     # Create Feature set for text
 
-    # Tokenize
-    print('Creating text feature set')
-    X_train = tokenize(X_train)
-    X_test = tokenize(X_test)
-
-    # Create text transformer
-    DATA_EXTERNAL_PATH = DATA_PATH + 'external/'
-    word2vec_path = DATA_EXTERNAL_PATH + 'GoogleNews-vectors-negative300.bin.gz'
-    avg_embeddings_transformer = create_avg_word_embeddings(word2vec_path)
-
     # Create Feature Union
     print('Creating feature union')
-    feats = make_features_pipeline(avg_embeddings_transformer, 'tokens')
+    tfidf_transformer = create_tfidf()
+    feats = make_features_pipeline(tfidf_transformer, 'tokens')
 
     # Calculate Baseline
     print('Calculating baseline')

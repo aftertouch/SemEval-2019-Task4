@@ -35,8 +35,8 @@ def parse_provided_gt(data_path):
 
     # Get paths and column names for data files
     try:
-        gt_train_path = data_raw_path + 'ground-truth-training-20180831.xml'
-        gt_val_path = data_raw_path + 'ground-truth-validation-20180831.xml'
+        gt_train_path = data_raw_path + 'ground-truth-training-bypublisher-20181122.xml'
+        gt_val_path = data_raw_path + 'ground-truth-validation-bypublisher-20181122.xml'
     except:
         print('Data file(s) not found.')
 
@@ -49,14 +49,14 @@ def parse_provided_gt(data_path):
     # Parse ground truth files
     for gt_path in [gt_train_path, gt_val_path]:
 
-        gt_df = parse_ground_truth(gt_path)
+        gt_df = parse_ground_truth(gt_path, gt_cols)
 
         gt_list.append(gt_df)
 
     return gt_list
 
 
-def parse_ground_truth(gt_path):
+def parse_ground_truth(gt_path, gt_cols):
     # Find all articles in XML tree
     tree = et.parse(gt_path)
     root = tree.getroot()
@@ -81,8 +81,8 @@ def parse_provided_text(DATA_PATH):
 
     # Check if data files exist
     try:
-        text_train_path = DATA_RAW_PATH + 'articles-training-20180831.xml'
-        text_val_path = DATA_RAW_PATH + 'articles-validation-20180831.xml'
+        text_train_path = DATA_RAW_PATH + 'articles-training-bypublisher-20181122.xml'
+        text_val_path = DATA_RAW_PATH + 'articles-validation-bypublisher-20181122.xml'
     except:
         print('Data file(s) not found.')
 
