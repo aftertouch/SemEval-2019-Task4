@@ -1,7 +1,9 @@
-import gensim
-import numpy as np
-from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.feature_extraction.text import TfidfVectorizer
+from gensim.models.doc2vec import Doc2Vec, TaggedDocument
+import pickle
+from glob import glob
+
+import logging
 
 
 def create_tfidf(fit=False, X_train=None, X_test=None):
@@ -16,43 +18,29 @@ def create_tfidf(fit=False, X_train=None, X_test=None):
     return tfidf_vectorizer
 
 
-def create_avg_word_embeddings(vectors_path, generate_missing=False, k=300, fit=False, X_train=None, X_test=None):
-    vectors = gensim.models.KeyedVectors.load_word2vec_format(vectors_path, binary=True)
-
-    avg_word_embeddings_transformer = AvgWordEmbeddingsTransformer(vectors, generate_missing)
-
-    if fit:
-        X_train_tfidf = avg_word_embeddings_transformer.fit_transform(X_train)
-        X_test_tfidf = avg_word_embeddings_transformer.transform(X_test)
-
-        return avg_word_embeddings_transformer, X_test_tfidf, X_test_tfidf
-
-    return avg_word_embeddings_transformer
+def create_tagged_documents():
+    pass
 
 
-class AvgWordEmbeddingsTransformer(BaseEstimator, TransformerMixin):
-
-    def __init__(self, vectors, generate_missing=True, k=300):
-        self.vectors = vectors
-        self.generate_missing = generate_missing
-        self.k = k
-
-    def fit(self, X, y=None):
-        return self
-
-    def transform(self, X):
-        embeddings = X.apply(lambda x: get_average_word2vec(x, self.vectors, generate_missing=self.generate_missing))
-        return list(embeddings)
+def create_docvec_model(DATA_PROCESSED_PATH, MODEL_PATH):
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    tagged_documents_train = TrainCorpus(DATA_PROCESSED_PATH)
+    doc2vec_model = Doc2Vec(tagged_documents_train, workers=8, vector_size=300, epochs=16, dm=1, min_count=3)
+    doc2vec_model.save(MODEL_PATH + 'd2v300')
 
 
-def get_average_word2vec(tokens_list, vector, generate_missing=False, k=300):
-    if len(tokens_list) < 1:
-        return np.zeros(k)
-    if generate_missing:
-        vectorized = [vector[word] if word in vector else np.random.rand(k) for word in tokens_list]
-    else:
-        vectorized = [vector[word] if word in vector else np.zeros(k) for word in tokens_list]
-    length = len(vectorized)
-    summed = np.sum(vectorized, axis=0)
-    averaged = np.divide(summed, length)
-    return averaged
+class TrainCorpus(object):
+
+    def __init__(self, filepath):
+        self.filepath = filepath
+        self.filenames = glob(self.filepath + "tagged_documents_train*").sort()
+
+    def __iter__(self):
+        for filename in self.filenames:
+            with open(filename, "rb") as internal_filename:
+                f = pickle.load(internal_filename)
+                for i, line in enumerate(f):
+
+                    if (i % 10000 == 0):
+                        logging.info("read {0} docs".format(i))
+                    yield line
