@@ -13,7 +13,7 @@ def create_tfidf(fit=False, X_train=None, X_test=None):
         X_train_tfidf = tfidf_vectorizer.fit_transform(X_train)
         X_test_tfidf = tfidf_vectorizer.transform(X_test)
 
-        return tfidf_vectorizer, X_test_tfidf, X_test_tfidf
+        return tfidf_vectorizer, X_train_tfidf, X_test_tfidf
 
     return tfidf_vectorizer
 
