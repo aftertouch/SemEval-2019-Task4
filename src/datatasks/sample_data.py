@@ -3,7 +3,6 @@
 """
 
 from math import floor
-
 import pandas as pd
 
 

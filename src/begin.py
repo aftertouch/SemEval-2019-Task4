@@ -12,7 +12,7 @@ from datatasks.preprocess import preprocess
 from datatasks.parse_xml import parse_provided
 from datatasks.remove_articles import remove_articles
 from models.models import run_models, calculate_baseline
-from models.feature_spaces import create_tfidf
+from models.feature_spaces import create_tfidf, create_tagged_documents, create_docvec_model, infer_docvecs, load_docvecs
 from models.plot import plot_confusion_matrix, plot_correct_per_publisher
 from models.EDA import create_ydf
 
@@ -55,41 +55,54 @@ def main():
         print('Preprocessing Text')
         preprocess(DATA_INTERIM_PATH)
 
-    # Load training and validation data
-    print('Loading data')
-    train = pd.read_csv(DATA_INTERIM_PATH + 'train_p.csv')
-    val = pd.read_csv(DATA_INTERIM_PATH + 'val_p.csv')
-
-    # Split into X and y
-    X_train = train.drop('hyperpartisan', axis=1)
-    y_train = train['hyperpartisan']
-    X_test = val.drop('hyperpartisan', axis=1)
-    y_test = val['hyperpartisan']
+    # Create Document Vectors
+    if not os.path.exists(DATA_PROCESSED_PATH + 'inferred_doc_vectors_train.txt'):
+        print('Creating Document Vectors')
+        tagged_documents_train, tagged_documents_test = create_tagged_documents(DATA_PATH)
+        doc2vec_model = create_docvec_model(DATA_PROCESSED_PATH, MODEL_PATH)
+        infer_docvecs(doc2vec_model, tagged_documents_train, tagged_documents_test, DATA_PROCESSED_PATH)
 
     # Create TF-IDF Features
     print('Creating TF-IDF Features')
-    tfidf_vectorizer, X_train_tfidf, X_test_tfidf = create_tfidf(fit=True, X_train=X_train, X_test=X_test)
+    # tfidf_vectorizer, X_train_tfidf, X_test_tfidf = create_tfidf(fit=True, DATA_INTERIM_PATH=DATA_INTERIM_PATH)
 
-    # Create Document Vectors Features
+    # Load inferred document vectors
+    print('Loading document vectors')
+    X_train_doc2vec, X_test_doc2vec = load_docvecs(DATA_PROCESSED_PATH)
+
+    # Load targets
+    y_train = pd.read_csv(DATA_INTERIM_PATH + 'train_p.csv', usecols=['hyperpartisan'])['hyperpartisan']
+    y_test = pd.read_csv(DATA_INTERIM_PATH + 'val_p.csv', usecols=['hyperpartisan'])['hyperpartisan']
 
     # Calculate Baseline
     print('Calculating baseline')
-    calculate_baseline(train)
+    calculate_baseline(y_train)
 
-    # Evaluate Models
+    # Initialize best model
+    best_model = {
+        'model': None,
+        'type': '',
+        'accuracy': 0,
+        'predictions': None
+    }
+
+    # Evaluate models
     models_list = ['lr']
-    best_model, best_model_type, best_model_predictions, clf = run_models('tfidf', models_list,
-                                                                          X_train_tfidf, X_test_tfidf, y_train, y_test)
+    #best_model = run_models('tfidf', models_list, X_train_tfidf, X_test_tfidf, y_train, y_test)
+    best_model = run_models('doc2vec', models_list, best_model, X_train_doc2vec, X_test_doc2vec, y_train, y_test)
+
+    # Print best results
+    print('Best model is {} with an accuracy score of {:.4f}'.format(best_model['type'], best_model['accuracy']))
 
     # Confusion Matrix
-    plot_confusion_matrix(y_test, best_model_predictions)
+    plot_confusion_matrix(y_test, best_model['predictions'])
 
     # Plot correct per publisher
-    ydf = create_ydf(val, best_model_predictions)
+    ydf = create_ydf(DATA_INTERIM_PATH, best_model['predictions'])
     plot_correct_per_publisher(ydf)
 
     # Serialize and save best model
-    joblib.dump(best_model, MODEL_PATH + best_model_type + '.joblib')
+    joblib.dump(best_model['model'], MODEL_PATH + best_model['type'] + '.joblib')
 
 
 if __name__ == '__main__':

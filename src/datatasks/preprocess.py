@@ -1,30 +1,36 @@
-import re
+"""
+@author: Jonathan
+"""
 
+import re
 import numpy as np
 import pandas as pd
 from nltk.tokenize.toktok import ToktokTokenizer
 from tqdm import tqdm
-
 from datatasks.contractions import CONTRACTION_MAP
 
-
+# Main preprocessing function
 def preprocess(data_interim_path):
 
+    # Load data
     print('Loading')
     train = pd.read_csv(data_interim_path + 'train_c.csv')
     val = pd.read_csv(data_interim_path + 'val_c.csv')
 
     tqdm.pandas()
 
+    # Normalize Text for each article
     print('Normalizing Text')
     for df in [train, val]:
         df['preprocessed_text'] = df.progress_apply(add_title_to_article_text, axis=1)
         df['preprocessed_text'] = df['preprocessed_text'].progress_apply(normalize_text)
 
+    # Replace publisher signatures for training set
     print('Replacing publisher signatures')
     train = train.progress_apply(replace_publisher_signatures, axis=1)
 
-    print('Removing stopwords and tokenizing')
+    # Tokenize and remove stopwords
+    print('Tokenizing and removing stopwords')
     for df in [train, val]:
         df[['preprocessed_text', 'tokens']] = df.loc[:, 'preprocessed_text'].progress_apply(remove_stopwords_and_tokenize)
 
@@ -45,7 +51,7 @@ def normalize_text(text):
 
     return text
 
-
+# Replace semiautonomously generated list of common noise phreases
 def replace_publisher_signatures(article):
     removal_dict = {
         'foxbusiness': ['continue reading below', 'opens a new window', 'has no position in any of the stocks mentioned',
@@ -68,20 +74,21 @@ def replace_publisher_signatures(article):
             'the daily beast']
     }
 
+    # Check each article's domain. If it's in the removal dictionary, remove each noise phrase from article text
     if article['domain'] in removal_dict.keys():
         for phrase in removal_dict[article['domain']]:
             article['preprocessed_text'] = re.sub(phrase, '', article['preprocessed_text'])
 
     return article
 
-
+# Add article title as string to article text
 def add_title_to_article_text(article):
     if article['title'] is not np.nan:
         return str(article['title']) + ' ' + str(article['article_text'])
     else:
         return str(article['article_text'])
 
-
+# Replace HTML artifacts
 def replace_html_stuff(text):
     # Remove all between left and right brackets
     text = re.sub(r'(?s)&lt.*?&gt;', '', text)
@@ -108,7 +115,8 @@ def replace_html_stuff(text):
 
     return text
 
-
+# Expand contractions.
+# Source: https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72
 def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
     contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())),
                                       flags=re.IGNORECASE | re.DOTALL)
@@ -126,7 +134,7 @@ def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
     expanded_text = re.sub("'", "", expanded_text)
     return expanded_text
 
-
+# Replace numbers with masking
 def mask_numbers(text):
     text = re.sub('[0-9]{5,}', '#####', text)
     text = re.sub('[0-9]{4}', '####', text)
@@ -135,24 +143,24 @@ def mask_numbers(text):
 
     return text
 
-
+# Remove special characters
 def remove_special_characters(text, remove_digits=False):
     pattern = r'[^a-zA-z0-9#\s]' if not remove_digits else r'[^a-zA-z\s]'
     text = re.sub(pattern, '', text)
     return text
 
-
+# Remove extra whitespace
 def remove_extra_whitespace(text):
     text = re.sub(' +', ' ', text)
     return text
 
-
+# Replace newlines
 def replace_newlines(text):
     text = re.sub(r'\n', ' ', text)
 
     return text
 
-
+# Tokenize, then remove list of corpus specific stopwords
 def remove_stopwords_and_tokenize(text):
     tokenizer = ToktokTokenizer()
     stopword_list = ['advertisement', 'via', 'image', 'source', 'click', 'video', 'editing', 'investingcom', '___', 'gmt', 'copyright', 'reporting', 'et', 'reprint', 'featured', 'embedded', 'journal',

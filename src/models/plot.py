@@ -117,7 +117,7 @@ def plot_important_words(importance, title):
     plt.subplots_adjust(wspace=0.8)
     plt.show(block=True)
 
-
+# Function to plot correct predictions on a per publisher basis
 def plot_correct_per_publisher(ydf, title='Percent Correct per Publisher', save_path=None):
     incorrect = ydf[~(ydf['true'] == ydf['predicted'])]
     preds_dict = {}
