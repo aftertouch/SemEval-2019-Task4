@@ -8,7 +8,7 @@ import pandas as pd
 
 
 # Sample the datasets
-def sample_data(df, sample_size, train_or_val, save=False):
+def sample_data(df, sample_size, train_or_val, save=False, DATA_PATH=None):
 
     # Create empty sample dataframe
     df_sample = pd.DataFrame()
@@ -33,6 +33,7 @@ def sample_data(df, sample_size, train_or_val, save=False):
 
     # Save dataframe
     if save:
-        df_sample.to_csv(DATA_PROCESSED_PATH + train_or_val + str(sample_size) + '_' + str(i) + '.csv', index=False)
+        DATA_PROCESSED_PATH = DATA_PATH + 'processed/'
+        df_sample.to_csv(DATA_PROCESSED_PATH + train_or_val + str(sample_size) + '.csv')
 
     return df_sample

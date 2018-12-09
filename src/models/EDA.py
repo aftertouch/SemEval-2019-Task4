@@ -5,7 +5,9 @@ Credits:
 https://github.com/hundredblocks/concrete_NLP_tutorial/blob/master/NLP_notebook.ipynb
 """
 
+import pandas as pd
 import numpy as np
+import eli5
 from sklearn.feature_extraction.text import CountVectorizer
 
 
@@ -124,3 +126,73 @@ def filter_common_signatures(signatures, vectorizer, X, thresh=0.5):
         diffs[domain] = diff
 
     return diffs
+
+
+def find_common_context_windows(term, domain, df, df_text_col, window):
+    series = df[(df['preprocessed_text'].str.contains(' {} '.format(term))) &
+                (df['domain'] == domain)].reset_index()[df_text_col]
+
+    context = []
+
+    for text in series:
+        text_split = text.split(' ')
+
+        indices = [i for i, x in enumerate(text_split) if x == term]
+
+        for index in indices:
+            context.append([catch(lambda: text_split[index + i]) for i in range(-window, window + 1)])
+
+    context_df = pd.DataFrame(context)
+
+    return context_df
+
+
+def catch(func, handle=lambda e: e, *args, **kwargs):
+    try:
+        return func(*args, **kwargs)
+    except Exception as e:
+        return 'OOR'
+
+
+def examine_top_weights(df, clf, vec, CONTEXT_THRESH, top_n_domains, n_features):
+    weights = eli5.explain_weights_df(clf, vec=vec)
+    weights['weight'] = np.absolute(weights['weight'])
+    weights.sort_values('weight', inplace=True, ascending=False);
+    base_props = df['domain'].value_counts(normalize=True)[0:top_n_domains]
+    for i in range(0, n_features):  # len(features[0]['tops'][0])):
+        row = weights.iloc[i]
+        feature = row['feature']
+        props = df[(df['preprocessed_text'].str.contains(" {} ".format(feature), regex=False)) &
+                      (df['domain'].isin(base_props.keys()))]['domain'].value_counts(normalize=True)
+        for key in props.keys():
+            if props[key] > 2 * base_props[key]:
+
+                # Examine context of term
+                context = find_common_context_windows(feature, key, df, 'preprocessed_text', 1)
+                forward_context = context[0].value_counts(normalize=True)
+                if forward_context[0] > CONTEXT_THRESH:
+                    print(feature.upper())
+                    print(key,
+                          "- Observed: {:.3f}, Expected: {:.3f}, Difference: {:.3f}".format(props[key], base_props[key],
+                                                                                            props[key] / base_props[
+                                                                                                key]))
+                    print(forward_context[forward_context > CONTEXT_THRESH])
+                    print('\n')
+                backward_context = context[2].value_counts(normalize=True)
+                if backward_context[0] > CONTEXT_THRESH:
+                    print(feature.upper())
+                    print(key,
+                          "- Observed: {:.3f}, Expected: {:.3f}, Difference: {:.3f}".format(props[key], base_props[key],
+                                                                                            props[key] / base_props[
+                                                                                                key]))
+                    print(backward_context[backward_context > CONTEXT_THRESH])
+                    print('\n')
+
+        print('\n')
+
+
+def create_ydf(val, preds):
+    ydf = pd.DataFrame(list(zip(val['hyperpartisan'], preds, val['preprocessed_text'], val['domain'])),
+                       columns=['true', 'predicted', 'preprocessed_text', 'domain'], index=val.index)
+
+    return ydf

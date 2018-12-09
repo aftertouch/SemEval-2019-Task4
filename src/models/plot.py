@@ -7,13 +7,16 @@ import itertools
 import matplotlib
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+import pandas as pd
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics import confusion_matrix
+import mplcursors
 
 # COLOR PALETTES - From Vapeplot package
 COOL_LIST = ["#FF6AD5", "#C774E8", "#AD8CFF", "#8795E8", "#94D0FF"]
 COOL_PURPLE = '#AD8CFF'
+COOL_PINK_BLUE = matplotlib.colors.ListedColormap(['#94D0FF', '#FF6AD5'])
 COOL_LIST_MONO = ['#FFFFFF', COOL_PURPLE]
 COOL_PAL = matplotlib.colors.ListedColormap(COOL_LIST)
 COOL_PAL_CONT_MONO = matplotlib.colors.LinearSegmentedColormap.from_list('cool', COOL_LIST_MONO)
@@ -21,21 +24,21 @@ COOL_PAL_CONT_MONO = matplotlib.colors.LinearSegmentedColormap.from_list('cool',
 
 # Function to create Latent Semantic Analysis plot
 # @credit: https://github.com/hundredblocks/concrete_NLP_tutorial/blob/master/NLP_notebook.ipynb
-def plot_LSA(X_train, test_labels, plot=True, title='LSA'):
-    fig = plt.figure(figsize=(16, 16))
+def plot_LSA(X_train, test_labels, plot=True, title='LSA', save_path=None):
+    fig = plt.figure(figsize=(12, 12))
 
     lsa = TruncatedSVD(n_components=2)
     lsa.fit(X_train)
     lsa_scores = lsa.transform(X_train)
-    color_mapper = {label: idx for idx, label in enumerate(set(test_labels))}
-    color_column = [color_mapper[label] for label in test_labels]
-    colors = ['orange', 'blue']
     if plot:
-        plt.scatter(lsa_scores[:, 0], lsa_scores[:, 1], s=8, alpha=.8, c=test_labels, cmap=COOL_PAL)
-        red_patch = mpatches.Patch(color='#FF6AD5', label='Non-HP')
-        green_patch = mpatches.Patch(color='#94D0FF', label='HP')
+        plt.scatter(lsa_scores[:, 0], lsa_scores[:, 1], s=8, alpha=.8, c=test_labels, cmap=COOL_PINK_BLUE)
+        red_patch = mpatches.Patch(color='#94D0FF', label='Non-HP')
+        green_patch = mpatches.Patch(color='#FF6AD5', label='HP')
         plt.legend(handles=[red_patch, green_patch], prop={'size': 30})
         plt.title(title, fontsize=30)
+
+    if save_path is not None:
+        plt.savefig(save_path)
 
     plt.show(block=False)
 
@@ -44,7 +47,7 @@ def plot_LSA(X_train, test_labels, plot=True, title='LSA'):
 
 # Function to create Confusion Matrix plot
 # @credit: https://github.com/hundredblocks/concrete_NLP_tutorial/blob/master/NLP_notebook.ipynb
-def plot_confusion_matrix(y_test, y_predicted_counts, normalize=False, title='Confusion Matrix'):
+def plot_confusion_matrix(y_test, y_predicted_counts, normalize=False, title='Confusion Matrix', save_path=None):
     fig = plt.figure(figsize=(8, 8))
 
     cm = confusion_matrix(y_test, y_predicted_counts)
@@ -67,7 +70,11 @@ def plot_confusion_matrix(y_test, y_predicted_counts, normalize=False, title='Co
     plt.tight_layout()
     plt.ylabel('True Label', fontsize=30)
     plt.xlabel('Predicted Label', fontsize=30)
-    plt.show(block=True)
+
+    if save_path is not None:
+        plt.savefig(save_path)
+
+    plt.show(block=False)
 
 
 # Function to plot largest coefficients of features of logistic regression model
@@ -109,3 +116,39 @@ def plot_important_words(importance, title):
 
     plt.subplots_adjust(wspace=0.8)
     plt.show(block=True)
+
+
+def plot_correct_per_publisher(ydf, title='Percent Correct per Publisher', save_path=None):
+    incorrect = ydf[~(ydf['true'] == ydf['predicted'])]
+    preds_dict = {}
+    for domain in ydf['domain'].value_counts().keys():
+        total_articles = ydf[ydf['domain'] == domain].shape[0]
+        correct_predictions = total_articles - incorrect[incorrect['domain'] == domain].shape[0]
+        hyperpartisan = ydf[ydf['domain'] == domain]['true'].value_counts().keys()[0]
+        preds_dict[domain] = {
+            'total_articles': total_articles,
+            'correct_predictions': correct_predictions,
+            'pct_correct': correct_predictions / total_articles,
+            'hyperpartisan': hyperpartisan
+        }
+    domains = list(preds_dict.keys())
+    article_counts = np.array([preds_dict[domain]['total_articles'] for domain in domains])
+    pct_correct = np.array([preds_dict[domain]['pct_correct'] for domain in domains])
+    hyperpartisan = np.array([preds_dict[domain]['hyperpartisan'] for domain in domains])
+
+    fig = plt.figure(figsize=(12, 12))
+    scatter = plt.scatter(x=article_counts, y=pct_correct, c=hyperpartisan, s=100, cmap=COOL_PINK_BLUE)
+    plt.title(title, fontsize=30)
+    plt.xlabel('Number of Articles', fontsize=20)
+    plt.ylabel('Percent Correct', fontsize=20)
+    red_patch = mpatches.Patch(color='#94D0FF', label='Non-HP')
+    green_patch = mpatches.Patch(color='#FF6AD5', label='HP')
+    plt.legend(handles=[red_patch, green_patch], prop={'size': 30})
+
+    if save_path is not None:
+        plt.savefig(save_path)
+
+    mplcursors.cursor(scatter, hover=True).connect(
+        "add", lambda sel: sel.annotation.set_text(domains[sel.target.index]))
+
+    plt.show()

@@ -2,12 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3043b954-c566-4ced-952b-7a3e6737c785" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/datatasks/text_features.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/11-7-more-preprocessing.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/11-7-more-preprocessing.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/begin.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/begin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datatasks/parse_xml.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatasks/parse_xml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/11-6-NN-from-scratch.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/11-6-NN-from-scratch.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/11-9-test-eli5.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/11-9-test-eli5.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/Untitled1.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/Untitled1.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/Untitled2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/Untitled2.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/datatasks/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatasks/preprocess.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/datatasks/remove_articles.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatasks/remove_articles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datatasks/sample_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatasks/sample_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/EDA.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/EDA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/plot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,42 +25,43 @@
     <session id="2001870114">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="9" />
+          <entry key="project.closed" value="15" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.open.time.8" value="4" />
-          <entry key="project.opened" value="11" />
+          <entry key="project.open.time.8" value="9" />
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="ipynb" value="8" />
+          <entry key="ipynb" value="9" />
           <entry key="md" value="1" />
-          <entry key="py" value="24" />
+          <entry key="py" value="37" />
           <entry key="sh" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Bash" value="1" />
-          <entry key="IPNB" value="8" />
+          <entry key="IPNB" value="9" />
           <entry key="Markdown" value="1" />
-          <entry key="Python" value="24" />
+          <entry key="Python" value="37" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="91" />
-          <entry key="py" value="1782" />
+          <entry key="py" value="4065" />
           <entry key="txt" value="61" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="152" />
-          <entry key="Python" value="1782" />
+          <entry key="Python" value="4065" />
         </counts>
       </usages-collector>
     </session>
@@ -62,19 +69,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/datatasks/custom_features.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="705">
-              <caret line="51" column="31" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/begin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="511">
-              <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+            <state relative-caret-position="1170">
+              <caret line="92" column="111" selection-start-line="91" selection-start-column="4" selection-end-line="92" selection-end-column="111" />
               <folding>
                 <element signature="e#27#36#0" expanded="true" />
               </folding>
@@ -83,10 +81,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/datatasks/remove_articles.py">
+        <entry file="file://$PROJECT_DIR$/src/models/plot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="421">
-              <caret line="87" selection-start-line="87" selection-end-line="87" />
+            <state relative-caret-position="283">
+              <caret line="72" selection-start-line="72" selection-end-line="72" />
+              <folding>
+                <element signature="e#27#43#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -94,8 +95,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/datatasks/sample_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
+            <state relative-caret-position="450">
+              <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
               <folding>
                 <element signature="e#27#49#0" expanded="true" />
               </folding>
@@ -104,52 +105,70 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/models/pipeline.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/models/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
+            <state relative-caret-position="2235">
+              <caret line="156" column="44" selection-start-line="156" selection-start-column="44" selection-end-line="156" selection-end-column="44" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/models/feature_spaces.py">
+        <entry file="file://$PROJECT_DIR$/src/datatasks/remove_articles.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25" column="54" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="435">
+              <caret line="31" selection-start-line="31" selection-end-line="31" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/datatasks/preprocess.py">
+        <entry file="file://$PROJECT_DIR$/src/datatasks/text_features.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
+            <state relative-caret-position="150">
+              <caret line="10" column="60" lean-forward="true" selection-start-line="10" selection-start-column="60" selection-end-line="10" selection-end-column="60" />
               <folding>
-                <marker date="1542904309237" expanded="true" signature="2544:2739" ph="..." />
+                <element signature="e#0#19#0" expanded="true" />
+                <marker date="1543671185822" expanded="true" signature="94:95" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/datatasks/parse_xml.py">
+        <entry file="file://$PROJECT_DIR$/src/datatasks/preprocess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+            <state relative-caret-position="-392">
+              <caret line="61" column="69" selection-start-line="61" selection-start-column="69" selection-end-line="61" selection-end-column="69" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+                <marker date="1543935320799" expanded="true" signature="4910:5105" ph="..." />
+                <marker date="1543935320799" expanded="true" signature="5407:5463" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/models/pipeline.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="345">
+              <caret line="24" column="23" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+              <folding>
+                <element signature="e#167#223#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/models/EDA.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2880">
+              <caret line="195" column="73" selection-start-line="195" selection-start-column="73" selection-end-line="195" selection-end-column="73" />
+              <folding>
+                <element signature="e#123#142#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -166,12 +185,16 @@
         <option value="$PROJECT_DIR$/src/datatasks/custom_features.py" />
         <option value="$PROJECT_DIR$/src/externals/bias_list.py" />
         <option value="$PROJECT_DIR$/notebooks/11-11-examine-df-tlds-not-in-bias-list.ipynb" />
-        <option value="$PROJECT_DIR$/src/datatasks/sample_data.py" />
         <option value="$PROJECT_DIR$/src/models/pipeline.py" />
         <option value="$PROJECT_DIR$/src/datatasks/parse_xml.py" />
-        <option value="$PROJECT_DIR$/src/datatasks/remove_articles.py" />
-        <option value="$PROJECT_DIR$/src/datatasks/preprocess.py" />
         <option value="$PROJECT_DIR$/src/begin.py" />
+        <option value="$PROJECT_DIR$/src/models/models.py" />
+        <option value="$PROJECT_DIR$/src/models/EDA.py" />
+        <option value="$PROJECT_DIR$/src/datatasks/remove_articles.py" />
+        <option value="$PROJECT_DIR$/src/datatasks/text_features.py" />
+        <option value="$PROJECT_DIR$/src/datatasks/sample_data.py" />
+        <option value="$PROJECT_DIR$/src/datatasks/preprocess.py" />
+        <option value="$PROJECT_DIR$/src/models/plot.py" />
       </list>
     </option>
   </component>
@@ -191,7 +214,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -231,6 +253,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -332,11 +355,11 @@
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1610" height="1027" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49499" visible="true" weight="0.1434949" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49499" visible="true" weight="0.15497449" />
       <window_info id="Structure" order="1" sideWeight="0.50501" side_tool="true" weight="0.13369964" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32941177" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -438,77 +461,141 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/datatasks/custom_features.py">
+    <entry file="file://$PROJECT_DIR$/src/datatasks/parse_xml.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="705">
-          <caret line="51" column="31" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
+        <state relative-caret-position="176">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/datatasks/sample_data.py">
+    <entry file="file://$PROJECT_DIR$/src/models/embedding.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
-          <folding>
-            <element signature="e#27#49#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="240">
+          <caret line="24" column="26" selection-start-line="24" selection-start-column="26" selection-end-line="24" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/models/pipeline.py">
+    <entry file="file://$PROJECT_DIR$/src/models/deep_models.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/envs/SemEval2019-4/lib/python3.6/site-packages/tornado/gen.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
+        <state relative-caret-position="207">
+          <caret line="1140" selection-start-line="1140" selection-end-line="1140" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/models/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/datatasks/remove_articles.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="87" selection-start-line="87" selection-end-line="87" />
+    <entry file="file://$PROJECT_DIR$/notebooks/11-26-gensimify-project.ipynb">
+      <provider selected="true" editor-type-id="ipnb-editor">
+        <state>
+          <selected id="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/models/feature_spaces.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="54" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="211">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/datatasks/parse_xml.py">
+    <entry file="file://$PROJECT_DIR$/src/datatasks/custom_features.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+        <state relative-caret-position="360">
+          <caret line="28" column="60" selection-start-line="28" selection-start-column="60" selection-end-line="28" selection-end-column="60" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/begin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+        <state relative-caret-position="1170">
+          <caret line="92" column="111" selection-start-line="91" selection-start-column="4" selection-end-line="92" selection-end-column="111" />
           <folding>
             <element signature="e#27#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/models/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2235">
+          <caret line="156" column="44" selection-start-line="156" selection-start-column="44" selection-end-line="156" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/datatasks/remove_articles.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="31" selection-start-line="31" selection-end-line="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/models/pipeline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="24" column="23" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+          <folding>
+            <element signature="e#167#223#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/models/EDA.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2880">
+          <caret line="195" column="73" selection-start-line="195" selection-start-column="73" selection-end-line="195" selection-end-column="73" />
+          <folding>
+            <element signature="e#123#142#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/datatasks/sample_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+          <folding>
+            <element signature="e#27#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/datatasks/preprocess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
+        <state relative-caret-position="-392">
+          <caret line="61" column="69" selection-start-line="61" selection-start-column="69" selection-end-line="61" selection-end-column="69" />
           <folding>
-            <marker date="1542904309237" expanded="true" signature="2544:2739" ph="..." />
+            <element signature="e#0#9#0" expanded="true" />
+            <marker date="1543935320799" expanded="true" signature="4910:5105" ph="..." />
+            <marker date="1543935320799" expanded="true" signature="5407:5463" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/models/plot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="72" selection-start-line="72" selection-end-line="72" />
+          <folding>
+            <element signature="e#27#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/envs/SemEval2019-4/lib/python3.6/tkinter/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="555" selection-start-line="555" selection-end-line="555" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/datatasks/text_features.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="60" lean-forward="true" selection-start-line="10" selection-start-column="60" selection-end-line="10" selection-end-column="60" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1543671185822" expanded="true" signature="94:95" ph="..." />
           </folding>
         </state>
       </provider>

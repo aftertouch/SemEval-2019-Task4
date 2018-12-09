@@ -3,18 +3,30 @@ import re
 import numpy as np
 import pandas as pd
 from nltk.tokenize.toktok import ToktokTokenizer
+from tqdm import tqdm
 
 from datatasks.contractions import CONTRACTION_MAP
 
 
 def preprocess(data_interim_path):
+
+    print('Loading')
     train = pd.read_csv(data_interim_path + 'train_c.csv')
     val = pd.read_csv(data_interim_path + 'val_c.csv')
 
+    tqdm.pandas()
+
+    print('Normalizing Text')
     for df in [train, val]:
-        df['preprocessed_text'] = df.apply(add_title_to_article_text, axis=1)
-        df['preprocessed_text'] = df['preprocessed_text'].apply(normalize_text)
-        df['tokens'] = df['preprocessed_text'].apply(tokenize)
+        df['preprocessed_text'] = df.progress_apply(add_title_to_article_text, axis=1)
+        df['preprocessed_text'] = df['preprocessed_text'].progress_apply(normalize_text)
+
+    print('Replacing publisher signatures')
+    train = train.progress_apply(replace_publisher_signatures, axis=1)
+
+    print('Removing stopwords and tokenizing')
+    for df in [train, val]:
+        df[['preprocessed_text', 'tokens']] = df.loc[:, 'preprocessed_text'].progress_apply(remove_stopwords_and_tokenize)
 
     print('Saving')
     train.to_csv(data_interim_path + 'train_p.csv', index=False)
@@ -22,19 +34,50 @@ def preprocess(data_interim_path):
 
 
 def normalize_text(text):
+
+    text = text.lower()
     text = replace_html_stuff(text)
     text = expand_contractions(text)
     text = mask_numbers(text)
     text = remove_special_characters(text)
+    text = replace_newlines(text)
     text = remove_extra_whitespace(text)
-    text = text.lower()
 
     return text
 
 
+def replace_publisher_signatures(article):
+    removal_dict = {
+        'foxbusiness': ['continue reading below', 'opens a new window', 'has no position in any of the stocks mentioned',
+                        'the motley fool has a disclosure policy', 'dow jones newswires', 'copyright marketwatch inc'],
+        'inthesetimes': ['your email your name recipients email comma separated message captcha',
+                         'like what youve read subscribe to in these times magazine or make a taxdeductible donation to fund this reporting'],
+        'truthdig': ['associated press', 'ap', 'read more', 'reuters'],
+        'washingtonblade': ['washington', 'blade'],
+        'feministing': ['header image'],
+        'motherjones': ['mother jones'],
+        'thedailywire': ['daily Wire'],
+        'factcheck': ['the factcheck wire'],
+        'pri': ['pris'],
+        'abqjournal': ['new mexico', 'santa fe', 'albuquerque', ' nm '],
+        'newsline': ['upi',
+                     'fusion media or anyone involved with fusion media will not accept any liability for loss or damage as a result of reliance on the information including data quotes charts and buysell signals contained within this website please be fully informed regarding the risks and costs associated with trading the financial markets it is one of the riskiest investment forms possible'],
+        'reuters': ['our standards the thomson reuters trust principles'],
+        'thedailybeast': [
+            'start and finish your day with the top stories from the daily beast a speedy smart summary of all the news you need to know and nothing you do not',
+            'the daily beast']
+    }
+
+    if article['domain'] in removal_dict.keys():
+        for phrase in removal_dict[article['domain']]:
+            article['preprocessed_text'] = re.sub(phrase, '', article['preprocessed_text'])
+
+    return article
+
+
 def add_title_to_article_text(article):
     if article['title'] is not np.nan:
-        return str(article['title']) + ' \n ' + str(article['article_text'])
+        return str(article['title']) + ' ' + str(article['article_text'])
     else:
         return str(article['article_text'])
 
@@ -50,6 +93,9 @@ def replace_html_stuff(text):
 
     # Remove !function
     text = re.sub(r'(?s)!function.*?(\?|\")\);', '', text)
+
+    # Remove everything between parenthesis
+    text = re.sub(r'\([^)]*\)', '', text)
 
     # Remove all URLs
     text = re.sub(r'^https?:\/\/.*[\r\n]*', '', text)
@@ -80,6 +126,7 @@ def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
     expanded_text = re.sub("'", "", expanded_text)
     return expanded_text
 
+
 def mask_numbers(text):
     text = re.sub('[0-9]{5,}', '#####', text)
     text = re.sub('[0-9]{4}', '####', text)
@@ -90,7 +137,7 @@ def mask_numbers(text):
 
 
 def remove_special_characters(text, remove_digits=False):
-    pattern = r'[^a-zA-z0-9\s]' if not remove_digits else r'[^a-zA-z\s]'
+    pattern = r'[^a-zA-z0-9#\s]' if not remove_digits else r'[^a-zA-z\s]'
     text = re.sub(pattern, '', text)
     return text
 
@@ -100,9 +147,20 @@ def remove_extra_whitespace(text):
     return text
 
 
-def tokenize(text):
+def replace_newlines(text):
+    text = re.sub(r'\n', ' ', text)
+
+    return text
+
+
+def remove_stopwords_and_tokenize(text):
     tokenizer = ToktokTokenizer()
-
+    stopword_list = ['advertisement', 'via', 'image', 'source', 'click', 'video', 'editing', 'investingcom', '___', 'gmt', 'copyright', 'reporting', 'et', 'reprint', 'featured', 'embedded', 'journal',
+             'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'mon',
+             'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december',
+             'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
     tokens = tokenizer.tokenize(text)
-
-    return tokens
+    tokens = [token.strip() for token in tokens]
+    filtered_tokens = [token for token in tokens if token not in stopword_list]
+    filtered_text = ' '.join(filtered_tokens)
+    return pd.Series([filtered_text, filtered_tokens])

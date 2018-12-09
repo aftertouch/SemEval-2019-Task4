@@ -145,7 +145,7 @@ def run_models(feats, model_list, X_train, X_test, y_train, y_test, random_state
 
 
 # Evaluate models. Print classification report with precision, recall, f1, print accuracy, and return accuracy
-def evaluate_model(predicted, y_test):
+def evaluate_model(y_test, predicted):
     print(classification_report(y_test, predicted))
     accuracy = accuracy_score(y_test, predicted)
     print('Accuracy: {:.4f}'.format(accuracy))

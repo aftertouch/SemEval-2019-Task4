@@ -30,7 +30,7 @@ def remove_articles(data_interim_path, remove_nonenglish=False):
         train.drop('language', axis=1, inplace=True)
         train.reset_index(inplace=True)
 
-    # Save reduced training set
+    # Save reduced sets
     train.to_csv(data_interim_path + 'train_reduced.csv', index=False)
 
 
