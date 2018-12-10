@@ -2,14 +2,18 @@
 @author: Negar
 """
 import numpy as np
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.grid_search import GridSearchCV
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
 
 
+# change CV to 4 or 3
 # grid search to find the best parameters for the best accuracy with 10-fold cross validation on training set
-def grid_search(model, param_grid, X, y, scorer='accuracy', n_jobs=3, cv=10):
+# def grid_search(model, param_grid, X, y, scorer='accuracy', n_jobs=3, cv=10):
+def grid_search(model, param_grid, X, y, scorer='accuracy', n_jobs=5, cv=3):
     grid = GridSearchCV(model, param_grid=param_grid, cv=cv, n_jobs=n_jobs,
                         scoring=scorer,
                         pre_dispatch=n_jobs)
@@ -20,12 +24,15 @@ def grid_search(model, param_grid, X, y, scorer='accuracy', n_jobs=3, cv=10):
 
 
 # Tune parameters for models and print best parameters
-# @credit: got parameters for Multinamial Naive Bayes and Gradient Boosting from https://github.com/Morgan243/CMSC516-SE-T8/blob/master/SemEvalEight/modeling/task1/task1_bag_of_words.py
+# @credit: got parameters for Multinamial Naive Bayes and Gradient Boosting and dt from https://github.com/Morgan243/CMSC516-SE-T8/blob/master/SemEvalEight/modeling/task1/task1_bag_of_words.py
 def tune_param(model_list, X_train, y_train):
     model_dict = {
         'nb': 'Multinomial Naive Bayes',
         'lr': 'LogisticRegression',
-        'gb': 'GradientBoostingClassifier'
+        'gb': 'GradientBoostingClassifier',
+        'dt': 'DecisionTreeClassifier',
+        'rf': 'RandomForestClassifier',
+        'svc': 'SVC'
     }
 
     for model_type in model_list:
@@ -59,6 +66,37 @@ def tune_param(model_list, X_train, y_train):
                                                         X=X_train, y=y_train)
             print(gb_best_params)
             print(gb_best_score)
+        elif model_type == 'dt':
+            dt_best_params, dt_best_score = grid_search(DecisionTreeClassifier(),
+                                                        param_grid=dict(
+                                                            criterion=['gini', 'entropy'],
+                                                            max_depth=[None] + list(range(24, 30, 3)),
+                                                            max_leaf_nodes=[None] + list(range(13, 20, 2)),
+                                                            min_samples_leaf=list(range(2, 5, 2)),
+                                                            min_samples_split=list(range(2, 5, 2))), X=X_train,
+                                                        y=y_train)
+            print(dt_best_params)
+            print(dt_best_score)
+        elif model_type == 'rf':
+            rf_best_params, rf_best_score = grid_search(RandomForestClassifier(),
+                                                        param_grid=dict(bootstrap=[True, False],
+                                                                        max_depth=[3, 20, 35, None],
+                                                                        max_features=['auto', 'sqrt'],
+                                                                        min_samples_leaf=[1, 2, 4],
+                                                                        min_samples_split=[2, 5, 10],
+                                                                        n_estimators=[25, 200, 230]), X=X_train,
+                                                        y=y_train)
+            print(rf_best_params)
+            print(rf_best_score)
+        elif model_type == 'svc':
+            svc_best_params, svc_best_score = grid_search(SVC(),
+                                                          param_grid=dict(C=[0.01, 0.1, 1, 10],
+                                                                          gamma=[0.001, 0.01, 0.1, 1],
+                                                                          kernel=['linear', 'rbf', 'sigmoid']),
+                                                          X=X_train, y=y_train)
+            print(svc_best_params)
+            print(svc_best_score)
+
         else:
             raise ValueError("No model type provided")
 
