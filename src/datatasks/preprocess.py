@@ -10,7 +10,6 @@ from tqdm import tqdm
 from datatasks.contractions import CONTRACTION_MAP
 from gensim.models.doc2vec import TaggedDocument
 import pickle
-from datatasks.sample_data import sample_data
 
 # Main preprocessing function
 def preprocess(data_path):
@@ -22,9 +21,6 @@ def preprocess(data_path):
     print('Loading')
     train = pd.read_csv(data_interim_path + 'train_c.csv')
     val = pd.read_csv(data_interim_path + 'val_c.csv')
-
-    train = sample_data(train, 11000, 'train')
-    val = sample_data(val, 1000, 'val')
 
     tqdm.pandas()
 
