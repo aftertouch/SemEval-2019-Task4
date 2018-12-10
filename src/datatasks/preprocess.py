@@ -8,14 +8,23 @@ import pandas as pd
 from nltk.tokenize.toktok import ToktokTokenizer
 from tqdm import tqdm
 from datatasks.contractions import CONTRACTION_MAP
+from gensim.models.doc2vec import TaggedDocument
+import pickle
+from datatasks.sample_data import sample_data
 
 # Main preprocessing function
-def preprocess(data_interim_path):
+def preprocess(data_path):
+
+    data_interim_path = data_path + 'interim/'
+    data_processed_path = data_path + 'processed/'
 
     # Load data
     print('Loading')
     train = pd.read_csv(data_interim_path + 'train_c.csv')
     val = pd.read_csv(data_interim_path + 'val_c.csv')
+
+    train = sample_data(train, 11000, 'train')
+    val = sample_data(val, 1000, 'val')
 
     tqdm.pandas()
 
@@ -37,6 +46,8 @@ def preprocess(data_interim_path):
     print('Saving')
     train.to_csv(data_interim_path + 'train_p.csv', index=False)
     val.to_csv(data_interim_path + 'val_p.csv', index=False)
+
+    return train[['tokens', 'hyperpartisan']], val[['tokens', 'hyperpartisan']]
 
 
 def normalize_text(text):
@@ -172,3 +183,12 @@ def remove_stopwords_and_tokenize(text):
     filtered_tokens = [token for token in tokens if token not in stopword_list]
     filtered_text = ' '.join(filtered_tokens)
     return pd.Series([filtered_text, filtered_tokens])
+
+def create_tagged_documents(df, train_or_val, data_processed_path):
+    tagged_documents = df.progress_apply(
+        lambda x: TaggedDocument(words=x['tokens'], tags=[x['hyperpartisan']]),
+        axis=1
+    )
+
+    with open(data_processed_path + "tagged_documents_{}.txt".format(train_or_val), "wb") as internal_filename:
+        pickle.dump(tagged_documents, internal_filename)

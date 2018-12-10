@@ -31,48 +31,6 @@ def create_tfidf(fit=False, DATA_INTERIM_PATH=None):
 
     return tfidf_vectorizer
 
-
-# Create TaggedDocuments for doc2vec
-def create_tagged_documents(DATA_PATH):
-
-    DATA_INTERIM_PATH = DATA_PATH + 'interim/'
-    DATA_PROCESSED_PATH = DATA_PATH + 'processed/'
-
-    train = pd.read_csv(DATA_INTERIM_PATH + 'train_p.csv', usecols=['tokens', 'hyperpartisan'])
-    val = pd.read_csv(DATA_INTERIM_PATH + 'val_p.csv', usecols=['tokens', 'hyperpartisan'])
-
-    # Set breaks for train
-    breaks = [0, 150000, 300000, 450000, train.shape[0]]
-
-    # Empty list for train tagged docs
-    tagged_documents_train = []
-
-    tqdm.pandas()
-
-    # Iterate over breaks and create tagged documents for training set
-    for i in range(0,len(breaks)-1):
-        tagged_documents_train_temp = train.iloc[breaks[i]:breaks[i+1]].progress_apply(
-            lambda x: TaggedDocument(words=ast.literal_eval(x['tokens']), tags=[x['hyperpartisan']]),
-            axis=1
-        )
-
-        with open(DATA_PROCESSED_PATH + "tagged_documents_train{}.txt".format(i), "wb") as internal_filename:
-            pickle.dump(tagged_documents_train_temp, internal_filename)
-
-        tagged_documents_train.extend(tagged_documents_train_temp)
-
-    # Create tagged documents for test set
-    tagged_documents_test = val.progress_apply(
-        lambda x: TaggedDocument(words=ast.literal_eval(x['tokens']), tags=[x['hyperpartisan']]),
-        axis=1
-    )
-
-    with open(DATA_PROCESSED_PATH + "tagged_documents_test.txt", "wb") as internal_filename:
-        pickle.dump(tagged_documents_test, internal_filename)
-
-    return tagged_documents_train, tagged_documents_test
-
-
 # Create doc2vec model using tagged documents
 def create_docvec_model(DATA_PROCESSED_PATH, MODEL_PATH):
 
@@ -80,7 +38,7 @@ def create_docvec_model(DATA_PROCESSED_PATH, MODEL_PATH):
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
     # Create a generator for training corpus
-    tagged_documents_train = TrainCorpus(DATA_PROCESSED_PATH)
+    tagged_documents_train = TrainCorpus(DATA_PROCESSED_PATH + 'tagged_documents_train.txt')
 
     # Fit and save doc2vec model
     cores = multiprocessing.cpu_count()
@@ -91,13 +49,19 @@ def create_docvec_model(DATA_PROCESSED_PATH, MODEL_PATH):
 
 
 # Infer document vectors from doc2vec model
-def infer_docvecs(doc2vec_model, tagged_documents_train, tagged_documents_test, DATA_PROCESSED_PATH):
+def infer_docvecs(DATA_PROCESSED_PATH, MODEL_PATH):
 
-    train_targets, train_regressors = zip(
-        *[(doc.tags[0], doc2vec_model.infer_vector(doc.words, steps=16)) for doc in tagged_documents_train])
+    with open(DATA_PROCESSED_PATH + "tagged_documents_train.txt", "rb") as internal_filename:
+        tagged_documents_train = pickle.load(internal_filename)
 
-    test_targets, test_regressors = zip(
-        *[(doc.tags[0], doc2vec_model.infer_vector(doc.words, steps=16)) for doc in tagged_documents_test])
+    with open(DATA_PROCESSED_PATH + "tagged_documents_val.txt", "rb") as internal_filename:
+        tagged_documents_test = pickle.load(internal_filename)
+
+    doc2vec_model = Doc2Vec.load(MODEL_PATH + 'd2v300')
+
+    train_regressors = [doc2vec_model.infer_vector(doc.words, steps=16) for doc in tqdm(tagged_documents_train)]
+
+    test_regressors = [doc2vec_model.infer_vector(doc.words, steps=16) for doc in tqdm(tagged_documents_test)]
 
     # Save inferred vectors
     with open(DATA_PROCESSED_PATH + "inferred_doc_vectors_train.txt", "wb") as internal_filename:
@@ -105,6 +69,7 @@ def infer_docvecs(doc2vec_model, tagged_documents_train, tagged_documents_test, 
 
     with open(DATA_PROCESSED_PATH + "inferred_doc_vectors_test.txt", "wb") as internal_filename:
         pickle.dump(test_regressors, internal_filename)
+
 
 # Load document vectors
 def load_docvecs(DATA_PROCESSED_PATH):
@@ -125,16 +90,14 @@ class TrainCorpus(object):
 
         # Set filepath, infer filenames
         self.filepath = filepath
-        self.filenames = glob(self.filepath + "tagged_documents_train*").sort()
 
     def __iter__(self):
 
         # Iterate over training files and yield
-        for filename in self.filenames:
-            with open(filename, "rb") as internal_filename:
-                f = pickle.load(internal_filename)
-                for i, line in enumerate(f):
+        with open(self.filepath, "rb") as internal_filename:
+            f = pickle.load(internal_filename)
+            for i, line in enumerate(f):
 
-                    if (i % 10000 == 0):
-                        logging.info("read {0} docs".format(i))
-                    yield line
+                if (i % 10000 == 0):
+                    logging.info("read {0} docs".format(i))
+                yield line

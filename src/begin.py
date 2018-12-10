@@ -8,11 +8,11 @@ import pandas as pd
 from sklearn.externals import joblib
 
 from datatasks.custom_features import generate_custom_features
-from datatasks.preprocess import preprocess
+from datatasks.preprocess import preprocess, create_tagged_documents
 from datatasks.parse_xml import parse_provided
 from datatasks.remove_articles import remove_articles
 from models.models import run_models, calculate_baseline
-from models.feature_spaces import create_tfidf, create_tagged_documents, create_docvec_model, infer_docvecs, load_docvecs
+from models.feature_spaces import create_tfidf, create_docvec_model, infer_docvecs, load_docvecs
 from models.plot import plot_confusion_matrix, plot_correct_per_publisher
 from models.EDA import create_ydf
 
@@ -53,18 +53,23 @@ def main():
     # Preprocess text
     if not os.path.exists(DATA_INTERIM_PATH + 'train_p.csv') or not os.path.exists(DATA_INTERIM_PATH + 'val_p.csv'):
         print('Preprocessing Text')
-        preprocess(DATA_INTERIM_PATH)
+        train_tokens, val_tokens = preprocess(DATA_PATH)
+        print('Creating Tagged Documents')
+        create_tagged_documents(train_tokens, 'train', DATA_PROCESSED_PATH)
+        create_tagged_documents(val_tokens, 'val', DATA_PROCESSED_PATH)
+
+    if not os.path.exists(MODEL_PATH + 'd2v300'):
+        print('Creating doc2vec model')
+        create_docvec_model(DATA_PROCESSED_PATH, MODEL_PATH)
 
     # Create Document Vectors
     if not os.path.exists(DATA_PROCESSED_PATH + 'inferred_doc_vectors_train.txt'):
-        print('Creating Document Vectors')
-        tagged_documents_train, tagged_documents_test = create_tagged_documents(DATA_PATH)
-        doc2vec_model = create_docvec_model(DATA_PROCESSED_PATH, MODEL_PATH)
-        infer_docvecs(doc2vec_model, tagged_documents_train, tagged_documents_test, DATA_PROCESSED_PATH)
+        print('Inferring Document Vectors')
+        infer_docvecs(DATA_PROCESSED_PATH, MODEL_PATH)
 
     # Create TF-IDF Features
     print('Creating TF-IDF Features')
-    # tfidf_vectorizer, X_train_tfidf, X_test_tfidf = create_tfidf(fit=True, DATA_INTERIM_PATH=DATA_INTERIM_PATH)
+    tfidf_vectorizer, X_train_tfidf, X_test_tfidf = create_tfidf(fit=True, DATA_INTERIM_PATH=DATA_INTERIM_PATH)
 
     # Load inferred document vectors
     print('Loading document vectors')
@@ -87,8 +92,8 @@ def main():
     }
 
     # Evaluate models
-    models_list = ['lr']
-    #best_model = run_models('tfidf', models_list, X_train_tfidf, X_test_tfidf, y_train, y_test)
+    models_list = ['lr', 'sgd', 'rf']
+    best_model = run_models('tfidf', models_list, best_model, X_train_tfidf, X_test_tfidf, y_train, y_test)
     best_model = run_models('doc2vec', models_list, best_model, X_train_doc2vec, X_test_doc2vec, y_train, y_test)
 
     # Print best results
