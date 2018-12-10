@@ -5,12 +5,11 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 import pickle
-from glob import glob
 import multiprocessing
 import logging
 import pandas as pd
-import ast
 from tqdm import tqdm
+import numpy as np
 
 
 # Create TF-IDF feature space
@@ -75,10 +74,10 @@ def infer_docvecs(DATA_PROCESSED_PATH, MODEL_PATH):
 def load_docvecs(DATA_PROCESSED_PATH):
 
     with open(DATA_PROCESSED_PATH + "inferred_doc_vectors_train.txt", "rb") as internal_filename:
-        X_train_doc2vec = pickle.load(internal_filename)
+        X_train_doc2vec = np.array(list(pickle.load(internal_filename)))
 
     with open(DATA_PROCESSED_PATH + "inferred_doc_vectors_test.txt", "rb") as internal_filename:
-        X_test_doc2vec = pickle.load(internal_filename)
+        X_test_doc2vec = np.array(list(pickle.load(internal_filename)))
 
     return X_train_doc2vec, X_test_doc2vec
 

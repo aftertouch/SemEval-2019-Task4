@@ -11,7 +11,7 @@ from datatasks.custom_features import generate_custom_features
 from datatasks.preprocess import preprocess, create_tagged_documents
 from datatasks.parse_xml import parse_provided
 from datatasks.remove_articles import remove_articles
-from models.models import run_models, calculate_baseline
+from models.models import run_models, run_deep_models, calculate_baseline
 from models.feature_spaces import create_tfidf, create_docvec_model, infer_docvecs, load_docvecs
 from models.plot import plot_confusion_matrix, plot_correct_per_publisher
 from models.EDA import create_ydf
@@ -86,6 +86,7 @@ def main():
     # Initialize best model
     best_model = {
         'model': None,
+        'features': '',
         'type': '',
         'accuracy': 0,
         'predictions': None
@@ -96,8 +97,11 @@ def main():
     best_model = run_models('tfidf', models_list, best_model, X_train_tfidf, X_test_tfidf, y_train, y_test)
     best_model = run_models('doc2vec', models_list, best_model, X_train_doc2vec, X_test_doc2vec, y_train, y_test)
 
+    # Run dense neural network
+    run_deep_models(X_train_doc2vec, X_test_doc2vec, y_train, y_test)
+
     # Print best results
-    print('Best model is {} with an accuracy score of {:.4f}'.format(best_model['type'], best_model['accuracy']))
+    print('Best model is {} {} with an accuracy score of {:.4f}'.format(best_model['features'], best_model['type'], best_model['accuracy']))
 
     # Confusion Matrix
     plot_confusion_matrix(y_test, best_model['predictions'])

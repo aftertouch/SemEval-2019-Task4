@@ -1,11 +1,15 @@
 """
 @author: Negar
+@credit: https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-10-neural-network-with-a6441269aa3c
 """
 
 from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.metrics import classification_report, accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.callbacks import EarlyStopping
 
 
 # Run all models and print evaluation metrics for all classifiers and also find and print best model
@@ -93,7 +97,7 @@ def run_models(features_name, model_list, best_model, X_train, X_test, y_train, 
             raise ValueError("No model type provided")
 
         # Fit classifier
-        print(model_dict[model_type])
+        print('{} - {}'.format(features_name, model_dict[model_type]))
         clf.fit(X_train, y_train)
 
         # predictions and evaluations
@@ -106,9 +110,32 @@ def run_models(features_name, model_list, best_model, X_train, X_test, y_train, 
             best_model['model'] = clf
             best_model['type'] = model_type
             best_model['predictions'] = predicted
+            best_model['features'] = features_name
 
     # Return best model and type
     return best_model
+
+
+# Network architecture from: https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-10-neural-network-with-a6441269aa3c
+def run_deep_models(X_train, X_test, y_train, y_test):
+    np.random.seed(1)
+    early_stop = EarlyStopping(monitor='val_acc', patience=5, mode='max')
+    callbacks_list = [early_stop]
+    model = Sequential()
+    model.add(Dense(256, activation='relu', input_dim=300))
+    model.add(Dropout(0.3))
+    model.add(Dense(256, activation='relu'))
+    model.add(Dropout(0.3))
+    model.add(Dense(256, activation='relu'))
+    model.add(Dropout(0.3))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(optimizer='adam',
+                  loss='binary_crossentropy',
+                  metrics=['accuracy'])
+
+    model.fit(X_train, y_train,
+              validation_data=(X_test, y_test),
+              epochs=30, batch_size=32, verbose=1, callbacks=callbacks_list)
 
 
 # Evaluate models. Print classification report with precision, recall, f1, print accuracy, and return accuracy
